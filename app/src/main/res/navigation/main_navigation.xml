@@ -9,4 +9,9 @@
         android:id="@+id/dest_game"
         android:name="com.betterlifeapps.chessclock.ui.game.GameFragment"
         tools:layout="@layout/fragment_game" />
+
+    <fragment
+        android:id="@+id/dest_settings"
+        android:name="com.betterlifeapps.chessclock.ui.settings.SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
 </navigation>

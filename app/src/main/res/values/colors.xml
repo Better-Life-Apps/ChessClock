@@ -22,4 +22,13 @@
     <color name="stroke_color">#D7D7D7</color>
     <color name="background">#FAFAFA</color>
     <color name="secondary_text_color">#666666</color>
+    <color name="primary_text">@color/black</color>
+    <color name="window_background">@color/gray_4</color>
+    <color name="secondary_text">@color/gray_1</color>
+    <color name="dialog_background">@color/white</color>
+
+    <color name="tab_indicator">@color/yellow</color>
+    <color name="tab_ripple_color">@color/yellow_faded</color>
+    <color name="tab_text_color">@color/yellow</color>
+    <color name="tab_deselected_color">@color/gray_5</color>
 </resources>
