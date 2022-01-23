@@ -3,4 +3,12 @@
     <string name="select_time_control">Select time control</string>
     <string name="standard">Standard</string>
     <string name="custom">Custom</string>
+    <string name="create_new_time_control">Create new time control</string>
+    <string name="delete_time_control_title">Delete time control</string>
+    <string name="delete_time_control_message">Are you sure want to delete this time control?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

@@ -26,6 +26,7 @@
     <color name="window_background">@color/gray_4</color>
     <color name="secondary_text">@color/gray_1</color>
     <color name="dialog_background">@color/white</color>
+    <color name="divider">@color/gray_2</color>
 
     <color name="tab_indicator">@color/yellow</color>
     <color name="tab_ripple_color">@color/yellow_faded</color>

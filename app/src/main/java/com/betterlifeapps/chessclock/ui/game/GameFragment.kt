@@ -56,7 +56,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         }
 
         binding.restart.setOnClickListener {
-            //Add confirmation dialog
+            //TODO Add confirmation dialog
             viewModel.onRestartClicked()
         }
 

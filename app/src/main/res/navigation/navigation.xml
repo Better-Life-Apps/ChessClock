@@ -8,10 +8,26 @@
     <fragment
         android:id="@+id/dest_game"
         android:name="com.betterlifeapps.chessclock.ui.game.GameFragment"
-        tools:layout="@layout/fragment_game" />
+        tools:layout="@layout/fragment_game"/>
 
     <fragment
         android:id="@+id/dest_settings"
         android:name="com.betterlifeapps.chessclock.ui.settings.SettingsFragment"
-        tools:layout="@layout/fragment_settings"/>
+        tools:layout="@layout/fragment_settings">
+
+        <action
+            android:id="@+id/action_new_time_control"
+            app:destination="@id/dest_edit"/>
+
+        <action
+            android:id="@+id/action_edit_time_control"
+            app:destination="@id/dest_edit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dest_edit"
+        android:name="com.betterlifeapps.chessclock.ui.settings.edit.EditFragment"
+        tools:layout="@layout/fragment_edit"/>
+
 </navigation>
