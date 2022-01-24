@@ -1,14 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.settings.edit.EditFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp">
 
-</FrameLayout>
+        <com.betterlifeapps.chessclock.ui.widget.InputFieldView
+            android:id="@+id/name_input_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:text="@string/name"/>
+
+        <TextView
+            android:id="@+id/player_1_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/player_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name_input_field"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/player_1_mode_container"
+            style="@style/Widget.App.TextInputLayout.Dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/player_1_text_view">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/ticker_auto_complete_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:inputType="none"
+                android:hint="@string/player_1_mode"
+                tools:ignore="KeyboardInaccessibleWidget"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/enter_count_layout"
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/enter_count"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_1_mode_container">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/count_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@drawable/rename_edit_text_cursor"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/enter_price_layout"
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/enter_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/enter_count_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/price_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@drawable/rename_edit_text_cursor"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/confirm_button"
+            style="@style/Widget.App.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/confirm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/enter_price_layout"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -28,6 +28,8 @@
     <color name="dialog_background">@color/white</color>
     <color name="divider">@color/gray_2</color>
 
+    <color name="edit_text_cursor">@color/black</color>
+
     <color name="tab_indicator">@color/yellow</color>
     <color name="tab_ripple_color">@color/yellow_faded</color>
     <color name="tab_text_color">@color/yellow</color>
