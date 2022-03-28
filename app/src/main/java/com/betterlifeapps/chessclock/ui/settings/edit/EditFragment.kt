@@ -1,16 +1,21 @@
 package com.betterlifeapps.chessclock.ui.settings.edit
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,14 +23,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.betterlifeapps.chessclock.R
+import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.ConstantTime
+import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.NoAddition
+import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.TimeAddition
 import com.betterlifeapps.std.BaseComposeFragment
 import com.betterlifeapps.std.ui.UiTextField
 import com.betterlifeapps.std.ui.composables.UiButton
 import com.betterlifeapps.std.ui.composables.VSpacer
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EditFragment : BaseComposeFragment() {
 
     @Composable
@@ -36,11 +49,20 @@ class EditFragment : BaseComposeFragment() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun EditScreen() {
+fun EditScreen(viewModel: EditViewModel = hiltViewModel()) {
+    val player1Mode by viewModel.player1Mode.collectAsState()
+    val onPlayer1ModeChanged = { newMode: TimerMode ->
+        viewModel.updatePlayer1Mode(newMode)
+    }
+    val player2Mode by viewModel.player2Mode.collectAsState()
+    val onPlayer2ModeChanged = { newMode: TimerMode ->
+        viewModel.updatePlayer2Mode(newMode)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         var name by remember { mutableStateOf("") }
         UiTextField(
@@ -50,109 +72,160 @@ fun EditScreen() {
             hint = stringResource(R.string.name)
         )
         VSpacer(height = 8)
-        Player1Container()
+        PlayerContainer(R.string.player_1, player1Mode, onPlayer1ModeChanged)
         VSpacer(height = 8)
-        Player2Container()
+        PlayerContainer(R.string.player_2, player2Mode, onPlayer2ModeChanged)
         VSpacer(height = 32)
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
-            UiButton(stringRes = R.string.confirm, onClick = { })
+            UiButton(stringRes = R.string.confirm, onClick = viewModel::onDoneButtonClicked)
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun Player2Container() {
-    Text(text = stringResource(id = R.string.player_2))
+private fun PlayerContainer(
+    @StringRes titleRes: Int,
+    mode: TimerMode,
+    onModeChanged: (TimerMode) -> Unit
+) {
+    Text(text = stringResource(id = titleRes))
     VSpacer(height = 16)
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
+    val items = listOf(ConstantTime(), TimeAddition(), NoAddition())
+    var isExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
+        expanded = isExpanded,
         onExpandedChange = {
-            expanded = !expanded
+            isExpanded = !isExpanded
         }
     ) {
         UiTextField(
             readOnly = true,
-            value = selectedOptionText,
+            value = stringResource(id = mode.titleRes),
             onValueChange = { },
-            label = { Text("Label") },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
+                    expanded = isExpanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            modifier = Modifier.fillMaxWidth()
         )
         ExposedDropdownMenu(
-            expanded = expanded,
+            expanded = isExpanded,
             onDismissRequest = {
-                expanded = false
+                isExpanded = false
             }
         ) {
-            options.forEach { selectionOption ->
+            items.forEach { item ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
+                        onModeChanged(item)
+                        isExpanded = false
                     }
                 ) {
-                    Text(text = selectionOption)
+                    Text(text = stringResource(id = item.titleRes))
                 }
+            }
+        }
+    }
+    Column(Modifier.fillMaxWidth()) {
+        when (mode) {
+            is ConstantTime -> {
+                UiTextField(
+                    value = mode.timePerTurn,
+                    onValueChange = {
+                        val newString = it.substringBefore(':') +
+                                ':' +
+                                it.substringAfter(':').take(2)
+
+                        if (newString.matches(regex)) {
+                            onModeChanged(mode.copy(timePerTurn = newString))
+                        }
+                    },
+                    label = {
+                        Text(
+                            text =
+                            stringResource(R.string.label_time_per_turn)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    )
+                )
+            }
+            is TimeAddition -> {
+                UiTextField(
+                    value = mode.startTime, onValueChange = {
+                        val newString = it.substringBefore(':') +
+                                ':' +
+                                it.substringAfter(':').take(2)
+
+                        if (newString.matches(regex)) {
+                            onModeChanged(mode.copy(startTime = newString))
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.label_start_time)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    )
+                )
+                UiTextField(
+                    value = mode.addition, onValueChange = {
+                        val newString = it.substringBefore(':') +
+                                ':' +
+                                it.substringAfter(':').take(2)
+
+                        if (newString.matches(regex)) {
+                            onModeChanged(mode.copy(addition = newString))
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.label_time_addition)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    )
+                )
+            }
+            is NoAddition -> {
+                UiTextField(
+                    value = mode.startTime, onValueChange = {
+                        val newString = it.substringBefore(':') +
+                                ':' +
+                                it.substringAfter(':').take(2)
+
+                        if (newString.matches(regex)) {
+                            onModeChanged(mode.copy(startTime = newString))
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.label_start_time)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    )
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun Player1Container() {
-    Text(text = stringResource(id = R.string.player_1))
-    VSpacer(height = 16)
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    ) {
-        UiTextField(
-            readOnly = true,
-            value = selectedOptionText,
-            onValueChange = { },
-            label = { Text("Label") },
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            }
-        ) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                    }
-                ) {
-                    Text(text = selectionOption)
-                }
-            }
-        }
-    }
-}
+//Optional any digit, then optional any digit, then any digit, then :, then digit 1-5, then any digit
+private val regex = "^\\d?\\d?\\d:[0-5]\\d\$".toRegex()
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
