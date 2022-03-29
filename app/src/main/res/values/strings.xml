@@ -19,4 +19,8 @@
     <string name="label_start_time">Start time</string>
     <string name="label_time_addition">Time addition</string>
 
+    <string name="rapid">Rapid</string>
+    <string name="blitz">Blitz</string>
+    <string name="bullet">Bullet</string>
+
 </resources>

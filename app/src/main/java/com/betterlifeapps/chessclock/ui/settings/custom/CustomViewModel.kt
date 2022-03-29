@@ -1,29 +1,37 @@
 package com.betterlifeapps.chessclock.ui.settings.custom
 
-import androidx.lifecycle.ViewModel
+import com.betterlifeapps.chessclock.data.GameModeRepository
+import com.betterlifeapps.std.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 
-class CustomViewModel : ViewModel() {
+@HiltViewModel
+class CustomViewModel @Inject constructor(gameModeRepository: GameModeRepository) :
+    BaseViewModel() {
 
     fun deleteTimeControl(id: Int) {
         // TODO
     }
 
-    val timeControls: Flow<List<ItemCustomTimeControl>> = flowOf(
-        listOf(
-            ItemCustomTimeControl(
-                0,
-                "First",
-                "15:57 21.12.2021",
-                "Total time: 10 min\n Addition: 5 sec"
-            ),
-            ItemCustomTimeControl(
-                1,
-                "Second",
-                "15:57 21.12.2021",
-                "Total time: 10 min\n Addition: 5 sec"
-            )
-        )
-    )
+    val timeControls: Flow<List<ItemCustomTimeControl>> =
+        gameModeRepository.getCustomGameModes().map {
+            it.map {
+                ItemCustomTimeControl(
+                    it.id, it.name, formatter.format(
+                        it.createDate.withOffsetSameInstant(
+                            ZoneOffset.from(OffsetDateTime.now())
+                        )
+                    )
+                )
+            }
+        }
+
+    companion object {
+        private val formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")
+    }
 }

@@ -1,5 +1,7 @@
 package com.betterlifeapps.chessclock.ui.settings.edit
 
+import android.os.Bundle
+import android.view.View
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +29,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.ConstantTime
 import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.NoAddition
@@ -37,19 +42,34 @@ import com.betterlifeapps.std.ui.UiTextField
 import com.betterlifeapps.std.ui.composables.UiButton
 import com.betterlifeapps.std.ui.composables.VSpacer
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class EditFragment : BaseComposeFragment() {
 
+    val viewModel: EditViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.commandFlow
+            .onEach {
+                when (it) {
+                    is EditViewModel.EditScreenCommands.Finish -> findNavController().navigateUp()
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
     @Composable
     override fun View() {
-        EditScreen()
+        EditScreen(viewModel)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun EditScreen(viewModel: EditViewModel = hiltViewModel()) {
+fun EditScreen(viewModel: EditViewModel) {
     val player1Mode by viewModel.player1Mode.collectAsState()
     val onPlayer1ModeChanged = { newMode: TimerMode ->
         viewModel.updatePlayer1Mode(newMode)
@@ -64,10 +84,10 @@ fun EditScreen(viewModel: EditViewModel = hiltViewModel()) {
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        var name by remember { mutableStateOf("") }
+        val name by viewModel.name.collectAsState()
         UiTextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = viewModel::updateName,
             modifier = Modifier.fillMaxWidth(),
             hint = stringResource(R.string.name)
         )
@@ -230,5 +250,5 @@ private val regex = "^\\d?\\d?\\d:[0-5]\\d\$".toRegex()
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewEditScreen() {
-    EditScreen()
+    EditScreen(hiltViewModel())
 }
