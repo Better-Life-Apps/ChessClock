@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.betterlifeapps.chessclock.common.ResourceResolverImpl
 import com.betterlifeapps.chessclock.data.AppDatabase
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.data.GameModeRepositoryImpl
 import com.betterlifeapps.chessclock.data.TimeControlRepository
 import com.betterlifeapps.chessclock.data.TimeControlRepositoryImpl
+import com.betterlifeapps.std.ResourceResolver
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,7 +24,8 @@ import kotlinx.coroutines.launch
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
+abstract class MainModule {
+
     companion object {
         @Singleton
         @Provides
@@ -53,4 +56,8 @@ abstract class DataModule {
     @Singleton
     @Binds
     abstract fun bindTimeControlRepository(timeControlRepositoryImpl: TimeControlRepositoryImpl): TimeControlRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindResourceResolver(resourceResolverImpl: ResourceResolverImpl): ResourceResolver
 }

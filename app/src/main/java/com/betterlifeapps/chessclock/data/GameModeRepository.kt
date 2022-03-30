@@ -1,6 +1,5 @@
 package com.betterlifeapps.chessclock.data
 
-
 import androidx.room.withTransaction
 import com.betterlifeapps.chessclock.data.entities.DataGameMode
 import com.betterlifeapps.chessclock.domain.GameMode
@@ -13,6 +12,7 @@ interface GameModeRepository {
     suspend fun saveGameMode(gameMode: GameMode)
     fun getCustomGameModes(): Flow<List<GameMode>>
     fun getStandardGameModes(): Flow<List<GameMode>>
+    suspend fun selectGameMode(id: Int)
 }
 
 @Singleton
@@ -79,6 +79,13 @@ class GameModeRepositoryImpl @Inject constructor(
                 player2ControlId
             )
             appDatabase.gameModeDao.insertGameMode(dataGameMode)
+        }
+    }
+
+    override suspend fun selectGameMode(id: Int) {
+        appDatabase.withTransaction {
+            appDatabase.gameModeDao.deselectCurrentGameMode()
+            appDatabase.gameModeDao.selectGameMode(id)
         }
     }
 }

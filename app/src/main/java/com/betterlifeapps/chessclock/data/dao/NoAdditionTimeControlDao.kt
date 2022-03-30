@@ -12,6 +12,6 @@ interface NoAdditionTimeControlDao {
     @Insert(onConflict = REPLACE)
     suspend fun insertTimeControl(timeControl: DataNoAdditionTimeControl)
 
-    @Query("SELECT * FROM `no_addition_time_modes` WHERE id = :id")
+    @Query("SELECT * FROM `no_addition_time_controls` WHERE id = :id")
     suspend fun getTimeControlById(id: Int): DataNoAdditionTimeControl?
 }

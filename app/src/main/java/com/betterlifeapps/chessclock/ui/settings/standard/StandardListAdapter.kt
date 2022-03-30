@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.databinding.ItemStandardBinding
 
-class StandardListAdapter :
+class StandardListAdapter(private val onItemClick: (ItemStandardTimeControl) -> Unit) :
     ListAdapter<ItemStandardTimeControl, StandardListAdapter.StandardViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StandardViewHolder {
@@ -34,6 +34,9 @@ class StandardListAdapter :
             divider.setBackgroundColor(primaryColor)
             timeDescription.setTextColor(primaryColor)
             additionDescription.setTextColor(primaryColor)
+            root.setOnClickListener {
+                onItemClick(item)
+            }
         }
     }
 
