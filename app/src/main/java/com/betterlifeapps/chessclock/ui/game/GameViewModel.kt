@@ -5,6 +5,7 @@ import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.domain.GameMode
 import com.betterlifeapps.chessclock.domain.GameState
 import com.betterlifeapps.chessclock.domain.PlayerState
+import com.betterlifeapps.chessclock.domain.TimeControl
 import com.betterlifeapps.std.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -84,11 +85,17 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
 
         val isFirstPlayerTurn = gameState.value.isFirstPlayerTurn
         val player1State = gameState.value.player1
-        val additionMillis = gameMode.value?.player1TimeControl?.additionTime ?: 0
+        val playerTimeControl = gameMode.value?.player1TimeControl
+        val newTimeMillis = if(playerTimeControl is TimeControl.ConstantTimeControl) {
+            playerTimeControl.timePerTurn
+        } else {
+            val additionMillis = playerTimeControl?.additionTime ?: 0
+            player1State.timeMillis + additionMillis
+        }
         gameState.value = gameState.value.copy(
             player1 = player1State.copy(
                 turn = player1State.turn + 1,
-                timeMillis = player1State.timeMillis + additionMillis
+                timeMillis = newTimeMillis
             ),
             isFirstPlayerTurn = !isFirstPlayerTurn
         )
@@ -101,11 +108,17 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
 
         val isFirstPlayerTurn = gameState.value.isFirstPlayerTurn
         val player2State = gameState.value.player2
-        val additionMillis = gameMode.value?.player2TimeControl?.additionTime ?: 0
+        val playerTimeControl = gameMode.value?.player2TimeControl
+        val newTimeMillis = if(playerTimeControl is TimeControl.ConstantTimeControl) {
+            playerTimeControl.timePerTurn
+        } else {
+            val additionMillis = playerTimeControl?.additionTime ?: 0
+            player2State.timeMillis + additionMillis
+        }
         gameState.value = gameState.value.copy(
             player2 = player2State.copy(
                 turn = player2State.turn + 1,
-                timeMillis = player2State.timeMillis + additionMillis
+                timeMillis = newTimeMillis
             ),
             isFirstPlayerTurn = !isFirstPlayerTurn
         )
