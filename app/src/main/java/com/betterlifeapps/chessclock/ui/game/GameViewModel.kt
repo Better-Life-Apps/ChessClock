@@ -43,7 +43,8 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
     val uiEvent: Flow<UiEvent> = _uiEvent
 
     fun onControlButtonClicked() {
-        gameState.value = gameState.value.copy(isPaused = !gameState.value.isPaused)
+        gameState.value =
+            gameState.value.copy(isPaused = !gameState.value.isPaused, isStarted = true)
         if (gameState.value.isPaused) {
             timerJob?.cancel()
         } else {
@@ -117,11 +118,25 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
             PlayerState(player1StartTime, 0),
             PlayerState(player2StartTime, 0),
             isFirstPlayerTurn = true,
-            isPaused = true
+            isPaused = true,
+            isStarted = false
         )
     }
 
     fun onRestartClicked() {
+        if (gameState.value.isStarted) {
+            runCoroutine {
+                _uiEvent.emit(UiEvent.ShowConfirmationDialog(
+                    onConfirmClicked = {
+                        restart()
+                        runCoroutine { _uiEvent.emit(UiEvent.Restart) }
+                    }
+                ))
+            }
+        }
+    }
+
+    private fun restart() {
         gameMode.value?.let {
             gameState.value = getGameStateFromGameMode(it)
         }
@@ -131,10 +146,13 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
         PlayerState(10 * 1000L, 0),
         PlayerState(10 * 1000, 0),
         isFirstPlayerTurn = true,
-        isPaused = true
+        isPaused = true,
+        isStarted = false
     )
 
     sealed class UiEvent {
         data class TimeExpired(val isFirstPlayerTurn: Boolean) : UiEvent()
+        object Restart : UiEvent()
+        data class ShowConfirmationDialog(val onConfirmClicked: () -> Unit) : UiEvent()
     }
 }

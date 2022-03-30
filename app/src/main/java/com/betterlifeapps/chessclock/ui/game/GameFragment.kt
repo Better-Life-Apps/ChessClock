@@ -13,11 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.betterlifeapps.chessclock.R
+import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.databinding.FragmentGameBinding
 import com.betterlifeapps.chessclock.domain.GameState
 import com.betterlifeapps.chessclock.ui.widget.PlayerView
 import com.betterlifeapps.std.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -26,6 +28,9 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
 
     private val binding by viewBinding<FragmentGameBinding>()
     private val viewModel by viewModels<GameViewModel>()
+
+    @Inject
+    lateinit var dialogManager: DialogManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,8 +66,6 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         }
 
         binding.restart.setOnClickListener {
-            resetPlayerViewsHeight()
-            //TODO Add confirmation dialog
             viewModel.onRestartClicked()
         }
 
@@ -129,6 +132,17 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                 val player = if (event.isFirstPlayerTurn) "First" else "Second"
                 Toast.makeText(requireContext(), "$player player time expired!", Toast.LENGTH_LONG)
                     .show()
+            }
+            is GameViewModel.UiEvent.ShowConfirmationDialog -> {
+                dialogManager.showConfirmationDialog(
+                    getString(R.string.restart_dialog_title),
+                    getString(R.string.restart_dialog_message)
+                ) {
+                    event.onConfirmClicked()
+                }
+            }
+            is GameViewModel.UiEvent.Restart -> {
+                resetPlayerViewsHeight()
             }
         }
     }

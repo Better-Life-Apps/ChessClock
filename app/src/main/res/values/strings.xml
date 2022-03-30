@@ -27,5 +27,7 @@
     <string name="addition_time_pattern">+%d sec</string>
 
     <string name="new_game_mode">Create new game mode</string>
+    <string name="restart_dialog_title">Restart game</string>
+    <string name="restart_dialog_message">Are you sure want to restart game?</string>
 
 </resources>

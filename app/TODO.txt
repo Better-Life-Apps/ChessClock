@@ -1,6 +1,7 @@
-4. Add confirmation dialog for restart.
 5. Change game screen player colors.
 6. Make app full screen.
 7. Disable rotation.
 8. Check if time calculated correctly for constant game mode.
 9. Reduce pause button height during game.
+10. Review behavior when game is ended.
+11. Make proper message for game end.
