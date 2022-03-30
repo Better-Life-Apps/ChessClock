@@ -1,0 +1,8 @@
+1. Add expand/collapse animation to game screen.
+2. Fix Game screen slide when coming back from settings.
+3. Fix navigation back on settings screen and on edit screen.
+4. Add confirmation dialog for restart.
+5. Change game screen player colors.
+6. Make app full screen.
+7. Disable rotation.
+8. Check if time calculated correctly for constant game mode.

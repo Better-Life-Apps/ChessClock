@@ -1,11 +1,13 @@
 package com.betterlifeapps.chessclock.ui.game
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.databinding.FragmentGameBinding
 import com.betterlifeapps.chessclock.domain.GameState
+import com.betterlifeapps.chessclock.ui.widget.PlayerView
 import com.betterlifeapps.std.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -37,7 +40,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         binding.playerView2.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),
-                R.color.yellow
+                R.color.white
             )
         )
 
@@ -58,6 +61,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         }
 
         binding.restart.setOnClickListener {
+            resetPlayerViewsHeight()
             //TODO Add confirmation dialog
             viewModel.onRestartClicked()
         }
@@ -77,6 +81,45 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         controlButton.setImageResource(if (gameState.isPaused) R.drawable.ic_play_48 else R.drawable.ic_pause_48)
         settings.isVisible = gameState.isPaused
         restart.isVisible = gameState.isPaused
+
+        if (!gameState.isPaused) {
+            if (gameState.isFirstPlayerTurn) {
+                startHeightAnim(playerView1, playerView2)
+            } else {
+                startHeightAnim(playerView2, playerView1)
+            }
+        }
+    }
+
+    private fun startHeightAnim(targetView: PlayerView, secondaryView: PlayerView) {
+        val startHeight = targetView.measuredHeight
+        val endHeight = (binding.container.measuredHeight * EXPANDED_RATIO).toInt()
+        val valueAnimator = ValueAnimator.ofInt(
+            startHeight,
+            endHeight
+        ).apply {
+            duration = ANIM_DURATION
+            interpolator = DecelerateInterpolator()
+            addUpdateListener {
+                val animatedValue = it.animatedValue as Int
+                targetView.updateLayoutParams {
+                    height = animatedValue
+                }
+                secondaryView.updateLayoutParams {
+                    height = binding.container.measuredHeight - animatedValue
+                }
+            }
+        }
+        valueAnimator.start()
+    }
+
+    private fun resetPlayerViewsHeight() {
+        binding.playerView1.updateLayoutParams {
+            height = binding.container.measuredHeight / 2
+        }
+        binding.playerView2.updateLayoutParams {
+            height = binding.container.measuredHeight / 2
+        }
     }
 
     private fun onUiEvent(event: GameViewModel.UiEvent) {
@@ -88,5 +131,10 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                     .show()
             }
         }
+    }
+
+    companion object {
+        private const val ANIM_DURATION = 200L
+        private const val EXPANDED_RATIO = 0.8f
     }
 }
