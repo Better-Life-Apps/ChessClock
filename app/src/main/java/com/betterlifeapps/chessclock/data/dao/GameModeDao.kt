@@ -26,4 +26,7 @@ interface GameModeDao {
 
     @Query("SELECT * FROM game_modes WHERE isSelected = 1")
     fun getSelectedGameMode(): Flow<DataGameMode>
+
+    @Query("DELETE FROM game_modes WHERE id = :id")
+    fun deleteById(id: Int)
 }

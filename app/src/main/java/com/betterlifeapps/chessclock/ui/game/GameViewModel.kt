@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class GameViewModel @Inject constructor(private val gameModeRepository: GameModeRepository) :
+class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) :
     BaseViewModel() {
 
     private val gameMode = gameModeRepository.getSelectedGameMode()

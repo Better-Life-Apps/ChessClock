@@ -14,6 +14,7 @@ interface GameModeRepository {
     fun getStandardGameModes(): Flow<List<GameMode>>
     suspend fun selectGameMode(id: Int)
     fun getSelectedGameMode(): Flow<GameMode>
+    suspend fun deleteAndCheckSelection(id: Int, isSelected: Boolean)
 }
 
 @Singleton
@@ -64,6 +65,19 @@ class GameModeRepositoryImpl @Inject constructor(
 
     override fun getSelectedGameMode(): Flow<GameMode> {
         return appDatabase.gameModeDao.getSelectedGameMode().map { it.mapToGameMode() }
+    }
+
+    override suspend fun deleteAndCheckSelection(id: Int, isSelected: Boolean) {
+        appDatabase.withTransaction {
+            appDatabase.gameModeDao.deleteById(id)
+            if (isSelected) {
+                selectDefaultGameMode()
+            }
+        }
+    }
+
+    private suspend fun selectDefaultGameMode() {
+        selectGameMode(0)
     }
 
     private suspend fun DataGameMode.mapToGameMode(): GameMode {

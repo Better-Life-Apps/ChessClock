@@ -47,7 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
         val blitzTimeControl = DataAdditionTimeControl(2, 3 * 60 * 1000, 2_000)
         additionTimeControlDao.insertTimeControl(blitzTimeControl)
         val blitzGameMode = DataGameMode(
-            0,
+            1,
             false,
             context.getString(R.string.blitz),
             OffsetDateTime.now(),
@@ -59,7 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
         val bulletTimeControl = DataAdditionTimeControl(3, 60 * 1000, 1_000)
         additionTimeControlDao.insertTimeControl(bulletTimeControl)
         val bulletGameMode = DataGameMode(
-            0,
+            2,
             false,
             context.getString(R.string.bullet),
             OffsetDateTime.now(),

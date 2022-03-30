@@ -11,22 +11,31 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
-class CustomViewModel @Inject constructor(gameModeRepository: GameModeRepository) :
+class CustomViewModel @Inject constructor(private val gameModeRepository: GameModeRepository) :
     BaseViewModel() {
 
-    fun deleteTimeControl(id: Int) {
-        // TODO
+    fun deleteGameMode(item: ItemCustomGameMode) {
+        runCoroutine {
+            gameModeRepository.deleteAndCheckSelection(item.id, item.isSelected)
+        }
     }
 
-    val timeControls: Flow<List<ItemCustomTimeControl>> =
-        gameModeRepository.getCustomGameModes().map {
-            it.map {
-                ItemCustomTimeControl(
+    fun selectGameMode(item: ItemCustomGameMode) {
+        runCoroutine {
+            gameModeRepository.selectGameMode(item.id)
+        }
+    }
+
+    val timeControls: Flow<List<ItemCustomGameMode>> =
+        gameModeRepository.getCustomGameModes().map { list ->
+            list.map {
+                ItemCustomGameMode(
                     it.id, it.name, formatter.format(
                         it.createDate.withOffsetSameInstant(
                             ZoneOffset.from(OffsetDateTime.now())
                         )
-                    )
+                    ),
+                    it.isSelected
                 )
             }
         }

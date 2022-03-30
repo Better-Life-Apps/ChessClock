@@ -26,12 +26,12 @@ class CustomFragment : BaseFragment(R.layout.fragment_custom) {
     internal lateinit var dialogManager: DialogManager
 
     private val customClickListener = object : ListItemClickListener {
-        override fun onItemClicked(itemId: Int) {
-            selectTimeControl(itemId)
+        override fun onItemClicked(item: ItemCustomGameMode) {
+            viewModel.selectGameMode(item)
         }
 
-        override fun onItemLongClicked(itemId: Int) {
-            showDeleteTimeControlDialog(itemId)
+        override fun onItemLongClicked(item: ItemCustomGameMode) {
+            showDeleteTimeControlDialog(item)
         }
     }
 
@@ -58,15 +58,11 @@ class CustomFragment : BaseFragment(R.layout.fragment_custom) {
         findNavController().navigate(R.id.action_new_time_control)
     }
 
-    private fun selectTimeControl(id: Int) {
-        //TODO
-    }
-
-    private fun showDeleteTimeControlDialog(id: Int) {
+    private fun showDeleteTimeControlDialog(item: ItemCustomGameMode) {
         val title = getString(R.string.delete_time_control_title)
         val message = getString(R.string.delete_time_control_message)
         dialogManager.showConfirmationDialog(title, message) {
-            viewModel.deleteTimeControl(id)
+            viewModel.deleteGameMode(item)
         }
     }
 

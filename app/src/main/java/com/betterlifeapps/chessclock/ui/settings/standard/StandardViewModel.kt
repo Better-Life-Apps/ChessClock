@@ -24,7 +24,7 @@ class StandardViewModel @Inject constructor(
             val additionSeconds = additionMillis / 1000
             val additionDescription =
                 resourceResolver.getString(R.string.addition_time_pattern, additionSeconds)
-            ItemStandardTimeControl(
+            ItemStandardGameMode(
                 it.id,
                 it.isSelected,
                 it.name,
@@ -34,7 +34,7 @@ class StandardViewModel @Inject constructor(
         }
     }
 
-    fun onItemClicked(item: ItemStandardTimeControl) {
+    fun onItemClicked(item: ItemStandardGameMode) {
         runCoroutine {
             if(!item.isSelected) {
                 gameModeRepository.selectGameMode(item.id)

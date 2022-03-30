@@ -3,6 +3,7 @@ package com.betterlifeapps.chessclock.ui.settings.custom
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,7 @@ import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.databinding.ItemCustomBinding
 
 class CustomListAdapter(private val clickListener: ListItemClickListener) :
-    ListAdapter<ItemCustomTimeControl, CustomListAdapter.CustomViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<ItemCustomGameMode, CustomListAdapter.CustomViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -23,11 +24,13 @@ class CustomListAdapter(private val clickListener: ListItemClickListener) :
             name.text = item.name
             date.text = item.date
 
+            check.isVisible = item.isSelected
+
             timeControlContainer.setOnClickListener {
-                clickListener.onItemClicked(item.id)
+                clickListener.onItemClicked(item)
             }
             timeControlContainer.setOnLongClickListener {
-                clickListener.onItemLongClicked(item.id)
+                clickListener.onItemLongClicked(item)
                 true
             }
         }
@@ -38,17 +41,17 @@ class CustomListAdapter(private val clickListener: ListItemClickListener) :
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemCustomTimeControl>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemCustomGameMode>() {
             override fun areItemsTheSame(
-                oldItem: ItemCustomTimeControl,
-                newItem: ItemCustomTimeControl
+                oldItem: ItemCustomGameMode,
+                newItem: ItemCustomGameMode
             ): Boolean {
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
-                oldItem: ItemCustomTimeControl,
-                newItem: ItemCustomTimeControl
+                oldItem: ItemCustomGameMode,
+                newItem: ItemCustomGameMode
             ): Boolean {
                 return oldItem == newItem
             }

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.databinding.ItemStandardBinding
 
-class StandardListAdapter(private val onItemClick: (ItemStandardTimeControl) -> Unit) :
-    ListAdapter<ItemStandardTimeControl, StandardListAdapter.StandardViewHolder>(DIFF_CALLBACK) {
+class StandardListAdapter(private val onItemClick: (ItemStandardGameMode) -> Unit) :
+    ListAdapter<ItemStandardGameMode, StandardListAdapter.StandardViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StandardViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -44,17 +44,17 @@ class StandardListAdapter(private val onItemClick: (ItemStandardTimeControl) -> 
         RecyclerView.ViewHolder(binding.root)
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemStandardTimeControl>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemStandardGameMode>() {
             override fun areItemsTheSame(
-                oldItem: ItemStandardTimeControl,
-                newItem: ItemStandardTimeControl
+                oldItem: ItemStandardGameMode,
+                newItem: ItemStandardGameMode
             ): Boolean {
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
-                oldItem: ItemStandardTimeControl,
-                newItem: ItemStandardTimeControl
+                oldItem: ItemStandardGameMode,
+                newItem: ItemStandardGameMode
             ): Boolean {
                 return oldItem == newItem
             }
