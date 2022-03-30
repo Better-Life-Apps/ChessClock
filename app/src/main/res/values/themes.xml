@@ -6,6 +6,7 @@
 
     <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
+        <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
