@@ -20,7 +20,7 @@ class EditViewModel @Inject constructor(val gameModeRepository: GameModeReposito
 
     val commandFlow = MutableSharedFlow<EditScreenCommands>()
 
-    private fun getDefaultTimerMode() = TimerMode.ConstantTime()
+    private fun getDefaultTimerMode() = TimerMode.TimeAddition("03:00", "00:02")
 
     fun updateName(newName: String) {
         name.value = newName
