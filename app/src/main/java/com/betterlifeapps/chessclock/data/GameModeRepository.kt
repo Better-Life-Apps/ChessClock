@@ -13,6 +13,7 @@ interface GameModeRepository {
     fun getCustomGameModes(): Flow<List<GameMode>>
     fun getStandardGameModes(): Flow<List<GameMode>>
     suspend fun selectGameMode(id: Int)
+    fun getSelectedGameMode(): Flow<GameMode>
 }
 
 @Singleton
@@ -23,43 +24,15 @@ class GameModeRepositoryImpl @Inject constructor(
 
     override fun getCustomGameModes(): Flow<List<GameMode>> {
         return appDatabase.gameModeDao.getCustomGameModes()
-            .map {
-                it.map {
-                    val player1Control =
-                        timeControlRepository.getTimeControlById(it.player1TimeControlId)
-                    val player2Control =
-                        timeControlRepository.getTimeControlById(it.player2TimeControlId)
-                    GameMode(
-                        it.id,
-                        it.isStandard,
-                        it.name,
-                        it.isSelected,
-                        it.creationDate,
-                        player1Control,
-                        player2Control
-                    )
-                }
+            .map { list ->
+                list.map { it.mapToGameMode() }
             }
     }
 
     override fun getStandardGameModes(): Flow<List<GameMode>> {
         return appDatabase.gameModeDao.getStandardGameModes()
-            .map {
-                it.map {
-                    val player1Control =
-                        timeControlRepository.getTimeControlById(it.player1TimeControlId)
-                    val player2Control =
-                        timeControlRepository.getTimeControlById(it.player2TimeControlId)
-                    GameMode(
-                        it.id,
-                        it.isStandard,
-                        it.name,
-                        it.isSelected,
-                        it.creationDate,
-                        player1Control,
-                        player2Control
-                    )
-                }
+            .map { list ->
+                list.map { it.mapToGameMode() }
             }
     }
 
@@ -87,5 +60,25 @@ class GameModeRepositoryImpl @Inject constructor(
             appDatabase.gameModeDao.deselectCurrentGameMode()
             appDatabase.gameModeDao.selectGameMode(id)
         }
+    }
+
+    override fun getSelectedGameMode(): Flow<GameMode> {
+        return appDatabase.gameModeDao.getSelectedGameMode().map { it.mapToGameMode() }
+    }
+
+    private suspend fun DataGameMode.mapToGameMode(): GameMode {
+        val player1Control =
+            timeControlRepository.getTimeControlById(player1TimeControlId)
+        val player2Control =
+            timeControlRepository.getTimeControlById(player2TimeControlId)
+        return GameMode(
+            id,
+            isStandard,
+            name,
+            isSelected,
+            creationDate,
+            player1Control,
+            player2Control
+        )
     }
 }

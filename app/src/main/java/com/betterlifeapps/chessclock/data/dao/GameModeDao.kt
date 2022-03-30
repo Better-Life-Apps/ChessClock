@@ -23,4 +23,7 @@ interface GameModeDao {
 
     @Query("UPDATE game_modes SET isSelected = 1 WHERE id = :id")
     fun selectGameMode(id: Int)
+
+    @Query("SELECT * FROM game_modes WHERE isSelected = 1")
+    fun getSelectedGameMode(): Flow<DataGameMode>
 }

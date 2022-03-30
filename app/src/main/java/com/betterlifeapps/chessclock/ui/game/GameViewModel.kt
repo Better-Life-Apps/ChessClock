@@ -1,18 +1,37 @@
 package com.betterlifeapps.chessclock.ui.game
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.betterlifeapps.chessclock.data.GameModeRepository
+import com.betterlifeapps.chessclock.domain.GameMode
 import com.betterlifeapps.chessclock.domain.GameState
 import com.betterlifeapps.chessclock.domain.PlayerState
+import com.betterlifeapps.std.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class GameViewModel : ViewModel() {
+@HiltViewModel
+class GameViewModel @Inject constructor(private val gameModeRepository: GameModeRepository) :
+    BaseViewModel() {
+
+    private val gameMode = gameModeRepository.getSelectedGameMode()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    init {
+        gameMode.collectFlow {
+            it?.let {
+                gameState.value = getGameStateFromGameMode(it)
+            }
+        }
+    }
 
     private var timerJob: Job? = null
 
@@ -64,8 +83,12 @@ class GameViewModel : ViewModel() {
 
         val isFirstPlayerTurn = gameState.value.isFirstPlayerTurn
         val player1State = gameState.value.player1
+        val additionMillis = gameMode.value?.player1TimeControl?.additionTime ?: 0
         gameState.value = gameState.value.copy(
-            player1 = player1State.copy(turn = player1State.turn + 1),
+            player1 = player1State.copy(
+                turn = player1State.turn + 1,
+                timeMillis = player1State.timeMillis + additionMillis
+            ),
             isFirstPlayerTurn = !isFirstPlayerTurn
         )
     }
@@ -77,20 +100,35 @@ class GameViewModel : ViewModel() {
 
         val isFirstPlayerTurn = gameState.value.isFirstPlayerTurn
         val player2State = gameState.value.player2
+        val additionMillis = gameMode.value?.player2TimeControl?.additionTime ?: 0
         gameState.value = gameState.value.copy(
-            player2 = player2State.copy(turn = player2State.turn + 1),
+            player2 = player2State.copy(
+                turn = player2State.turn + 1,
+                timeMillis = player2State.timeMillis + additionMillis
+            ),
             isFirstPlayerTurn = !isFirstPlayerTurn
         )
     }
 
+    private fun getGameStateFromGameMode(gameMode: GameMode): GameState {
+        val player1StartTime = gameMode.player1TimeControl.startTime
+        val player2StartTime = gameMode.player2TimeControl.startTime
+        return GameState(
+            PlayerState(player1StartTime, 0),
+            PlayerState(player2StartTime, 0),
+            isFirstPlayerTurn = true,
+            isPaused = true
+        )
+    }
+
     fun onRestartClicked() {
-        gameState.value = getDefaultGameState()
+        gameMode.value?.let {
+            gameState.value = getGameStateFromGameMode(it)
+        }
     }
 
     private fun getDefaultGameState() = GameState(
-//        PlayerState(30 * 60 * 1000L, 0),
-        PlayerState( 10 * 1000L, 0),
-//        PlayerState(30 * 60 * 1000, 0),
+        PlayerState(10 * 1000L, 0),
         PlayerState(10 * 1000, 0),
         isFirstPlayerTurn = true,
         isPaused = true

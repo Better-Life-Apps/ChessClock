@@ -14,9 +14,11 @@ import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.databinding.FragmentGameBinding
 import com.betterlifeapps.chessclock.domain.GameState
 import com.betterlifeapps.std.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@AndroidEntryPoint
 class GameFragment : BaseFragment(R.layout.fragment_game) {
 
     private val binding by viewBinding<FragmentGameBinding>()
@@ -62,11 +64,11 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
 
         viewModel.gameState
             .onEach(::bindGameState)
-            .launchIn(lifecycleScope)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.uiEvent
             .onEach(::onUiEvent)
-            .launchIn(lifecycleScope)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun bindGameState(gameState: GameState) = with(binding) {
