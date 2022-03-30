@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".ui.settings.SettingsFragment">
 
+    <com.betterlifeapps.chessclock.ui.widget.UiToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"

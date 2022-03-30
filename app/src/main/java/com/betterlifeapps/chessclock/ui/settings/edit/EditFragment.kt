@@ -40,9 +40,9 @@ import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.TimeAddition
 import com.betterlifeapps.std.BaseComposeFragment
 import com.betterlifeapps.std.ui.UiTextField
 import com.betterlifeapps.std.ui.composables.UiButton
+import com.betterlifeapps.std.ui.composables.UiToolbar
 import com.betterlifeapps.std.ui.composables.VSpacer
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -79,25 +79,33 @@ fun EditScreen(viewModel: EditViewModel) {
         viewModel.updatePlayer2Mode(newMode)
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
+        modifier = Modifier.fillMaxSize()
     ) {
-        val name by viewModel.name.collectAsState()
-        UiTextField(
-            value = name,
-            onValueChange = viewModel::updateName,
-            modifier = Modifier.fillMaxWidth(),
-            hint = stringResource(R.string.name)
+        UiToolbar(
+            text = stringResource(id = R.string.new_game_mode),
+            onBackButtonClick = viewModel::onBackClicked
         )
-        VSpacer(height = 8)
-        PlayerContainer(R.string.player_1, player1Mode, onPlayer1ModeChanged)
-        VSpacer(height = 8)
-        PlayerContainer(R.string.player_2, player2Mode, onPlayer2ModeChanged)
-        VSpacer(height = 32)
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
-            UiButton(stringRes = R.string.confirm, onClick = viewModel::onDoneButtonClicked)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            val name by viewModel.name.collectAsState()
+            UiTextField(
+                value = name,
+                onValueChange = viewModel::updateName,
+                modifier = Modifier.fillMaxWidth(),
+                hint = stringResource(R.string.name)
+            )
+            VSpacer(height = 8)
+            PlayerContainer(R.string.player_1, player1Mode, onPlayer1ModeChanged)
+            VSpacer(height = 8)
+            PlayerContainer(R.string.player_2, player2Mode, onPlayer2ModeChanged)
+            VSpacer(height = 32)
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+                UiButton(stringRes = R.string.confirm, onClick = viewModel::onDoneButtonClicked)
+            }
         }
     }
 }

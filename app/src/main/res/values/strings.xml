@@ -26,4 +26,6 @@
     <string name="start_time_pattern">%d min</string>
     <string name="addition_time_pattern">+%d sec</string>
 
+    <string name="new_game_mode">Create new game mode</string>
+
 </resources>

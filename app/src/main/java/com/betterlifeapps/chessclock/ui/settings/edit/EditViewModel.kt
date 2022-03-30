@@ -59,6 +59,10 @@ class EditViewModel @Inject constructor(val gameModeRepository: GameModeReposito
         }
     }
 
+    fun onBackClicked() {
+        runCoroutine { commandFlow.emit(EditScreenCommands.Finish) }
+    }
+
     private fun TimerMode.toTimeControl() = when (this) {
         is TimerMode.ConstantTime -> TimeControl.ConstantTimeControl(timeToLong(timePerTurn))
         is TimerMode.TimeAddition -> TimeControl.AdditionTimeControl(

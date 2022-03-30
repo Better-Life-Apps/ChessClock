@@ -18,11 +18,9 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBar {
-            show()
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            setDisplayHomeAsUpEnabled(true)
-            title = getString(R.string.select_time_control)
+        binding.toolbar.title = getString(R.string.select_time_control)
+        binding.toolbar.onBackButtonClicked = {
+            findNavController().navigateUp()
         }
 
         setupTabs()
