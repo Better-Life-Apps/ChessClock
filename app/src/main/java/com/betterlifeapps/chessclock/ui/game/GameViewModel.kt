@@ -5,6 +5,7 @@ import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.domain.GameMode
 import com.betterlifeapps.chessclock.domain.GameState
 import com.betterlifeapps.chessclock.domain.PlayerState
+import com.betterlifeapps.chessclock.domain.State
 import com.betterlifeapps.chessclock.domain.TimeControl
 import com.betterlifeapps.std.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,11 +45,18 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
     val uiEvent: Flow<UiEvent> = _uiEvent
 
     fun onControlButtonClicked() {
-        gameState.value =
-            gameState.value.copy(isPaused = !gameState.value.isPaused, isStarted = true)
-        if (gameState.value.isPaused) {
-            timerJob?.cancel()
+        if (gameState.value.state == State.FINISHED) {
+            restart()
         } else {
+            toggleGameState()
+        }
+    }
+
+    private fun toggleGameState() {
+        val newState = if(gameState.value.state == State.RUNNING) State.PAUSED else State.RUNNING
+        gameState.value =
+            gameState.value.copy(state = newState)
+        if (gameState.value.state == State.RUNNING) {
             timerJob = viewModelScope.launch {
                 while (true) {
                     delay(100L)
@@ -60,11 +68,11 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
                     }
 
                     val newPlayerState =
-                        currentPlayerState.copy(timeMillis = currentPlayerState.timeMillis - 100L)
+                        currentPlayerState.copy(timeMillis = (currentPlayerState.timeMillis - 100L).coerceAtLeast(0L))
                     if (newPlayerState.timeMillis <= 0) {
                         _uiEvent.emit(UiEvent.TimeExpired(gameState.value.isFirstPlayerTurn))
                         gameState.value = gameState.value.copy(
-                            isPaused = true
+                            state = State.FINISHED,
                         )
                         cancel()
                     }
@@ -75,18 +83,20 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
                     }
                 }
             }
+        } else {
+            timerJob?.cancel()
         }
     }
 
     fun onPlayer1Clicked() {
-        if (!gameState.value.isFirstPlayerTurn || gameState.value.isPaused) {
+        if (!gameState.value.isFirstPlayerTurn || gameState.value.state != State.RUNNING) {
             return
         }
 
         val isFirstPlayerTurn = gameState.value.isFirstPlayerTurn
         val player1State = gameState.value.player1
         val playerTimeControl = gameMode.value?.player1TimeControl
-        val newTimeMillis = if(playerTimeControl is TimeControl.ConstantTimeControl) {
+        val newTimeMillis = if (playerTimeControl is TimeControl.ConstantTimeControl) {
             playerTimeControl.timePerTurn
         } else {
             val additionMillis = playerTimeControl?.additionTime ?: 0
@@ -102,14 +112,14 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
     }
 
     fun onPlayer2Clicked() {
-        if (gameState.value.isFirstPlayerTurn || gameState.value.isPaused) {
+        if (gameState.value.isFirstPlayerTurn || gameState.value.state != State.RUNNING) {
             return
         }
 
         val isFirstPlayerTurn = gameState.value.isFirstPlayerTurn
         val player2State = gameState.value.player2
         val playerTimeControl = gameMode.value?.player2TimeControl
-        val newTimeMillis = if(playerTimeControl is TimeControl.ConstantTimeControl) {
+        val newTimeMillis = if (playerTimeControl is TimeControl.ConstantTimeControl) {
             playerTimeControl.timePerTurn
         } else {
             val additionMillis = playerTimeControl?.additionTime ?: 0
@@ -131,21 +141,27 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
             PlayerState(player1StartTime, 0),
             PlayerState(player2StartTime, 0),
             isFirstPlayerTurn = true,
-            isPaused = true,
-            isStarted = false
+            state = State.READY
         )
     }
 
     fun onRestartClicked() {
-        if (gameState.value.isStarted) {
-            runCoroutine {
-                _uiEvent.emit(UiEvent.ShowConfirmationDialog(
-                    onConfirmClicked = {
-                        restart()
-                        runCoroutine { _uiEvent.emit(UiEvent.Restart) }
-                    }
-                ))
+        when (gameState.value.state) {
+            State.PAUSED -> {
+                runCoroutine {
+                    _uiEvent.emit(UiEvent.ShowConfirmationDialog(
+                        onConfirmClicked = {
+                            restart()
+                            runCoroutine { _uiEvent.emit(UiEvent.Restart) }
+                        }
+                    ))
+                }
             }
+            State.FINISHED -> {
+                restart()
+                runCoroutine { _uiEvent.emit(UiEvent.Restart) }
+            }
+            else -> Unit
         }
     }
 
@@ -159,8 +175,7 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
         PlayerState(10 * 1000L, 0),
         PlayerState(10 * 1000, 0),
         isFirstPlayerTurn = true,
-        isPaused = true,
-        isStarted = false
+        state = State.READY
     )
 
     sealed class UiEvent {

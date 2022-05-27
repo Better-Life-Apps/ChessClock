@@ -1,7 +1,10 @@
 package com.betterlifeapps.chessclock.ui.game
 
 import android.animation.ValueAnimator
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
@@ -16,6 +19,7 @@ import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.databinding.FragmentGameBinding
 import com.betterlifeapps.chessclock.domain.GameState
+import com.betterlifeapps.chessclock.domain.State
 import com.betterlifeapps.chessclock.ui.widget.PlayerView
 import com.betterlifeapps.std.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -81,16 +85,19 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     private fun bindGameState(gameState: GameState) = with(binding) {
         playerView1.bindState(gameState.player1)
         playerView2.bindState(gameState.player2)
-        controlButton.setImageResource(if (gameState.isPaused) R.drawable.ic_play_48 else R.drawable.ic_pause_48)
-        settings.isVisible = gameState.isPaused
-        restart.isVisible = gameState.isPaused
+        controlButton.setImageResource(if (gameState.state == State.RUNNING) R.drawable.ic_pause_48 else R.drawable.ic_play_48)
+        settings.isVisible = gameState.state == State.PAUSED
+        restart.isVisible = gameState.state == State.PAUSED
 
-        if (!gameState.isPaused) {
+        if (gameState.state == State.RUNNING) {
             if (gameState.isFirstPlayerTurn) {
                 startHeightAnim(playerView1, playerView2)
             } else {
                 startHeightAnim(playerView2, playerView1)
             }
+        }
+        if (gameState.state == State.READY) {
+            resetPlayerViewsHeight()
         }
     }
 
@@ -132,6 +139,15 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                 val player = if (event.isFirstPlayerTurn) "First" else "Second"
                 Toast.makeText(requireContext(), "$player player time expired!", Toast.LENGTH_LONG)
                     .show()
+                val vibrator =
+                    ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val effect = VibrationEffect.createOneShot(300L, 200)
+                    vibrator?.vibrate(effect)
+                } else {
+                    @Suppress("DEPRECATION")
+                    vibrator?.vibrate(300L)
+                }
             }
             is GameViewModel.UiEvent.ShowConfirmationDialog -> {
                 dialogManager.showConfirmationDialog(

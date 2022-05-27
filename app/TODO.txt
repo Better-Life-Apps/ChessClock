@@ -3,4 +3,3 @@
 11. Make proper message for game end.
 12. Redesign Edit screen
 13. Add ime options to edit screen. Let user to go to the next field with next button
-14. Fix can't play second time.
