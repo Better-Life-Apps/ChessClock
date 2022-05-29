@@ -2,4 +2,3 @@
 10. Review behavior when game is ended.
 11. Make proper message for game end.
 12. Redesign Edit screen
-13. Add ime options to edit screen. Let user to go to the next field with next button
