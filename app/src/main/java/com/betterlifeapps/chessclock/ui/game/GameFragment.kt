@@ -49,7 +49,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         binding.playerView2.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),
-                R.color.white
+                R.color.red_1
             )
         )
 
@@ -135,7 +135,6 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     private fun onUiEvent(event: GameViewModel.UiEvent) {
         when (event) {
             is GameViewModel.UiEvent.TimeExpired -> {
-                //TODO Make proper loss message
                 val player = if (event.isFirstPlayerTurn) "First" else "Second"
                 Toast.makeText(requireContext(), "$player player time expired!", Toast.LENGTH_LONG)
                     .show()

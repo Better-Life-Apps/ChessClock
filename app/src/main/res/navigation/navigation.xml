@@ -27,7 +27,6 @@
 
     <fragment
         android:id="@+id/dest_edit"
-        android:name="com.betterlifeapps.chessclock.ui.settings.edit.EditFragment"
-        tools:layout="@layout/fragment_edit"/>
+        android:name="com.betterlifeapps.chessclock.ui.settings.edit.EditFragment" />
 
 </navigation>

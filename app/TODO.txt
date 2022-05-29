@@ -1,4 +1,2 @@
-5. Change game screen player colors.
-10. Review behavior when game is ended.
-11. Make proper message for game end.
 12. Redesign Edit screen
+13. Add toast on select custom game mode
