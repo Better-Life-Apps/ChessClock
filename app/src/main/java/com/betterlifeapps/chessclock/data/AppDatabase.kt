@@ -31,10 +31,16 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val gameModeDao: GameModeDao
 
     suspend fun addStandardGameModes(context: Context) {
+        addRapidGameMode(context)
+        addBlitzGameMode(context)
+        addBulletGameMode(context)
+    }
+
+    private suspend fun addRapidGameMode(context: Context) {
         val rapidTimeControl = DataAdditionTimeControl(1, 10 * 60 * 1000, 10_000)
         additionTimeControlDao.insertTimeControl(rapidTimeControl)
         val rapidGameMode = DataGameMode(
-            0,
+            1,
             true,
             context.getString(R.string.rapid),
             OffsetDateTime.now(),
@@ -43,11 +49,13 @@ abstract class AppDatabase : RoomDatabase() {
             1
         )
         gameModeDao.insertGameMode(rapidGameMode)
+    }
 
+    private suspend fun addBlitzGameMode(context: Context) {
         val blitzTimeControl = DataAdditionTimeControl(2, 3 * 60 * 1000, 2_000)
         additionTimeControlDao.insertTimeControl(blitzTimeControl)
         val blitzGameMode = DataGameMode(
-            1,
+            2,
             false,
             context.getString(R.string.blitz),
             OffsetDateTime.now(),
@@ -56,10 +64,13 @@ abstract class AppDatabase : RoomDatabase() {
             2
         )
         gameModeDao.insertGameMode(blitzGameMode)
+    }
+
+    private suspend fun addBulletGameMode(context: Context) {
         val bulletTimeControl = DataAdditionTimeControl(3, 60 * 1000, 1_000)
         additionTimeControlDao.insertTimeControl(bulletTimeControl)
         val bulletGameMode = DataGameMode(
-            2,
+            3,
             false,
             context.getString(R.string.bullet),
             OffsetDateTime.now(),

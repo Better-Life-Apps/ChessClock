@@ -2,6 +2,7 @@ package com.betterlifeapps.chessclock.ui.settings.edit
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenuItem
@@ -23,7 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,6 +54,11 @@ import kotlinx.coroutines.flow.onEach
 class EditFragment : BaseComposeFragment() {
 
     val viewModel: EditViewModel by viewModels()
+
+    override fun onStart() {
+        super.onStart()
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,7 +88,9 @@ fun EditScreen(viewModel: EditViewModel) {
         viewModel.updatePlayer2Mode(newMode)
     }
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         UiToolbar(
             text = stringResource(id = R.string.new_game_mode),
@@ -89,14 +100,17 @@ fun EditScreen(viewModel: EditViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState())
         ) {
             val name by viewModel.name.collectAsState()
             UiTextField(
                 value = name,
                 onValueChange = viewModel::updateName,
                 modifier = Modifier.fillMaxWidth(),
-                hint = stringResource(R.string.name)
+                hint = stringResource(R.string.name),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    autoCorrect = false,
+                    imeAction = ImeAction.Next
+                )
             )
             VSpacer(height = 8)
             PlayerContainer(R.string.player_1, player1Mode, onPlayer1ModeChanged)
@@ -110,13 +124,14 @@ fun EditScreen(viewModel: EditViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun PlayerContainer(
     @StringRes titleRes: Int,
     mode: TimerMode,
     onModeChanged: (TimerMode) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     Text(text = stringResource(id = titleRes))
     VSpacer(height = 16)
     val items = listOf(ConstantTime(), TimeAddition(), NoAddition())
@@ -181,6 +196,9 @@ private fun PlayerContainer(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { keyboardController?.hide() }
                     )
                 )
             }
@@ -223,6 +241,9 @@ private fun PlayerContainer(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { keyboardController?.hide() }
                     )
                 )
             }
@@ -245,6 +266,9 @@ private fun PlayerContainer(
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { keyboardController?.hide() }
                     )
                 )
             }

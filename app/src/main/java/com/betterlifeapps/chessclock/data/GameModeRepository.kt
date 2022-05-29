@@ -7,6 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 
 interface GameModeRepository {
     suspend fun saveGameMode(gameMode: GameMode)
@@ -64,7 +65,7 @@ class GameModeRepositoryImpl @Inject constructor(
     }
 
     override fun getSelectedGameMode(): Flow<GameMode> {
-        return appDatabase.gameModeDao.getSelectedGameMode().map { it.mapToGameMode() }
+        return appDatabase.gameModeDao.getSelectedGameMode().mapNotNull { it.mapToGameMode() }
     }
 
     override suspend fun deleteAndCheckSelection(id: Int, isSelected: Boolean) {
@@ -81,10 +82,8 @@ class GameModeRepositoryImpl @Inject constructor(
     }
 
     private suspend fun DataGameMode.mapToGameMode(): GameMode {
-        val player1Control =
-            timeControlRepository.getTimeControlById(player1TimeControlId)
-        val player2Control =
-            timeControlRepository.getTimeControlById(player2TimeControlId)
+        val player1Control = timeControlRepository.getTimeControlById(player1TimeControlId)
+        val player2Control = timeControlRepository.getTimeControlById(player2TimeControlId)
         return GameMode(
             id,
             isStandard,
