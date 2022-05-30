@@ -4,9 +4,8 @@
 
     </style>
 
-    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="android:windowFullscreen">true</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -21,6 +20,10 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:windowBackground">@color/window_background</item>
         <item name="materialAlertDialogTheme">@style/RoundedDialogTheme</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
         <!-- Customize your theme here. -->
     </style>
 
