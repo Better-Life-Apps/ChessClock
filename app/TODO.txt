@@ -1,2 +1,0 @@
-14. Save game state on app exit.
-15. Add russian
