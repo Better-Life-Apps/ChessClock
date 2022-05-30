@@ -17,6 +17,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,9 +42,10 @@ import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.ConstantTime
 import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.NoAddition
 import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.TimeAddition
+import com.betterlifeapps.chessclock.ui.theme.ChessAppTheme
 import com.betterlifeapps.std.BaseComposeFragment
-import com.betterlifeapps.std.ui.UiTextField
 import com.betterlifeapps.std.ui.composables.UiButton
+import com.betterlifeapps.std.ui.composables.UiTextField
 import com.betterlifeapps.std.ui.composables.UiToolbar
 import com.betterlifeapps.std.ui.composables.VSpacer
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,11 +74,13 @@ class EditFragment : BaseComposeFragment() {
 
     @Composable
     override fun View() {
-        EditScreen(viewModel)
+        ChessAppTheme {
+            EditScreen(viewModel)
+        }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EditScreen(viewModel: EditViewModel) {
     val player1Mode by viewModel.player1Mode.collectAsState()
@@ -90,7 +94,6 @@ fun EditScreen(viewModel: EditViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         UiToolbar(
             text = stringResource(id = R.string.new_game_mode),
@@ -100,21 +103,22 @@ fun EditScreen(viewModel: EditViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             val name by viewModel.name.collectAsState()
             UiTextField(
                 value = name,
                 onValueChange = viewModel::updateName,
                 modifier = Modifier.fillMaxWidth(),
-                hint = stringResource(R.string.name),
+                hint = stringResource(R.string.enter_name),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     autoCorrect = false,
                     imeAction = ImeAction.Next
                 )
             )
-            VSpacer(height = 8)
+            VSpacer(height = 24)
             PlayerContainer(R.string.player_1, player1Mode, onPlayer1ModeChanged)
-            VSpacer(height = 8)
+            VSpacer(height = 24)
             PlayerContainer(R.string.player_2, player2Mode, onPlayer2ModeChanged)
             VSpacer(height = 32)
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
@@ -132,8 +136,8 @@ private fun PlayerContainer(
     onModeChanged: (TimerMode) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    Text(text = stringResource(id = titleRes))
-    VSpacer(height = 16)
+    Text(text = stringResource(id = titleRes), style = MaterialTheme.typography.h5)
+    VSpacer(height = 8)
     val items = listOf(ConstantTime(), TimeAddition(), NoAddition())
     var isExpanded by remember { mutableStateOf(false) }
 

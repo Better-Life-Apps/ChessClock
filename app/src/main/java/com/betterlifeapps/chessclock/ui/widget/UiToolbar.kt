@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.AbstractComposeView
 import com.betterlifeapps.std.ui.composables.UiToolbar
-import com.betterlifeapps.std.ui.theme.UiTheme
+import com.betterlifeapps.chessclock.ui.theme.ChessAppTheme
 
 class UiToolbar @JvmOverloads constructor(
     context: Context,
@@ -21,7 +21,7 @@ class UiToolbar @JvmOverloads constructor(
 
     @Composable
     override fun Content() {
-        UiTheme {
+        ChessAppTheme {
             UiToolbar(
                 text = title,
                 onBackButtonClick = { onBackButtonClicked?.invoke() }
