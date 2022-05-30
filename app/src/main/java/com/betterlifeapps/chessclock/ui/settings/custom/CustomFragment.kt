@@ -41,6 +41,10 @@ class CustomFragment : BaseFragment(R.layout.fragment_custom) {
         binding.createNewTimeControl.createNewTimeControlContainer.setOnClickListener {
             onCreateNewClicked()
         }
+
+        viewModel.uiEvents.collectFlow {
+            super.onUiEvent(it)
+        }
     }
 
     private fun setupList() {

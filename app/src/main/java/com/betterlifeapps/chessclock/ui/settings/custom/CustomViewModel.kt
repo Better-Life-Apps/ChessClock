@@ -1,7 +1,9 @@
 package com.betterlifeapps.chessclock.ui.settings.custom
 
+import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.std.BaseViewModel
+import com.betterlifeapps.std.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -23,6 +25,7 @@ class CustomViewModel @Inject constructor(private val gameModeRepository: GameMo
     fun selectGameMode(item: ItemCustomGameMode) {
         runCoroutine {
             gameModeRepository.selectGameMode(item.id)
+            postUiEvent(UiEvent.ShowShortToastRes(R.string.game_mode_updated))
         }
     }
 

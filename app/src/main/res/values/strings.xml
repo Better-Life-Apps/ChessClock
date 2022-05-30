@@ -30,4 +30,6 @@
     <string name="restart_dialog_title">Restart game</string>
     <string name="restart_dialog_message">Are you sure want to restart game?</string>
 
+    <string name="game_mode_updated">Game mode updated</string>
+
 </resources>

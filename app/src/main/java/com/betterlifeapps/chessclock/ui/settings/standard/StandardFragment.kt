@@ -26,6 +26,10 @@ class StandardFragment : BaseFragment(R.layout.fragment_standard) {
         viewModel.standardTimeControls
             .onEach { adapter.submitList(it) }
             .launchIn(lifecycleScope)
+
+        viewModel.uiEvents.collectFlow {
+            super.onUiEvent(it)
+        }
     }
 
     companion object {

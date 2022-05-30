@@ -5,6 +5,7 @@ import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.domain.TimeControl
 import com.betterlifeapps.std.BaseViewModel
 import com.betterlifeapps.std.ResourceResolver
+import com.betterlifeapps.std.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map
@@ -36,8 +37,9 @@ class StandardViewModel @Inject constructor(
 
     fun onItemClicked(item: ItemStandardGameMode) {
         runCoroutine {
-            if(!item.isSelected) {
+            if (!item.isSelected) {
                 gameModeRepository.selectGameMode(item.id)
+                postUiEvent(UiEvent.ShowShortToastRes(R.string.game_mode_updated))
             }
         }
     }

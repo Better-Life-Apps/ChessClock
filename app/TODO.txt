@@ -1,3 +1,2 @@
-12. Redesign Edit screen
-13. Add toast on select custom game mode
 14. Save game state on app exit.
+15. Add russian

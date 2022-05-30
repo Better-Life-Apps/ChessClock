@@ -136,8 +136,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         when (event) {
             is GameViewModel.UiEvent.TimeExpired -> {
                 val player = if (event.isFirstPlayerTurn) "First" else "Second"
-                Toast.makeText(requireContext(), "$player player time expired!", Toast.LENGTH_LONG)
-                    .show()
+                showLongToast("$player player time expired!")
                 val vibrator =
                     ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
