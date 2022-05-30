@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.withTransaction
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.data.dao.AdditionTimeControlDao
 import com.betterlifeapps.chessclock.data.dao.ConstantTimeControlDao
@@ -30,7 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val noAdditionTimeControlDao: NoAdditionTimeControlDao
     abstract val gameModeDao: GameModeDao
 
-    suspend fun addStandardGameModes(context: Context) {
+    suspend fun addStandardGameModes(context: Context) = withTransaction {
         addRapidGameMode(context)
         addBlitzGameMode(context)
         addBulletGameMode(context)

@@ -1,13 +1,15 @@
 package com.betterlifeapps.chessclock.data
 
+import android.content.Context
 import androidx.room.withTransaction
 import com.betterlifeapps.chessclock.data.entities.DataGameMode
 import com.betterlifeapps.chessclock.domain.GameMode
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 
 interface GameModeRepository {
     suspend fun saveGameMode(gameMode: GameMode)
@@ -21,7 +23,8 @@ interface GameModeRepository {
 @Singleton
 class GameModeRepositoryImpl @Inject constructor(
     private val appDatabase: AppDatabase,
-    private val timeControlRepository: TimeControlRepository
+    private val timeControlRepository: TimeControlRepository,
+    @ApplicationContext private val context: Context
 ) : GameModeRepository {
 
     override fun getCustomGameModes(): Flow<List<GameMode>> {
@@ -65,7 +68,11 @@ class GameModeRepositoryImpl @Inject constructor(
     }
 
     override fun getSelectedGameMode(): Flow<GameMode> {
-        return appDatabase.gameModeDao.getSelectedGameMode().mapNotNull { it.mapToGameMode() }
+        return appDatabase.gameModeDao.observeSelectedGameMode()
+            .filterNotNull()
+            .map {
+                it.mapToGameMode()
+            }
     }
 
     override suspend fun deleteAndCheckSelection(id: Int, isSelected: Boolean) {
