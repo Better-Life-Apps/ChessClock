@@ -7,7 +7,6 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -102,8 +101,15 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     }
 
     private fun startHeightAnim(targetView: PlayerView, secondaryView: PlayerView) {
+        // Potential workaround for IllegalStateException in binding
+        val totalHeight = try {
+            binding.container.measuredHeight
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+            0
+        }
         val startHeight = targetView.measuredHeight
-        val endHeight = (binding.container.measuredHeight * EXPANDED_RATIO).toInt()
+        val endHeight = (totalHeight * EXPANDED_RATIO).toInt()
         val valueAnimator = ValueAnimator.ofInt(
             startHeight,
             endHeight
@@ -116,7 +122,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                     height = animatedValue
                 }
                 secondaryView.updateLayoutParams {
-                    height = binding.container.measuredHeight - animatedValue
+                    height = totalHeight - animatedValue
                 }
             }
         }
