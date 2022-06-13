@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChessClock</string>
+    <string name="select_time_control">Sélectionner le contrôle du temps</string>
+    <string name="standard">Standard</string>
+    <string name="custom">Custom</string>
+    <string name="create_new_time_control">Créer un nouveau contrôle horaire</string>
+    <string name="delete_time_control_title">Supprimer un contrôle horaire</string>
+    <string name="delete_time_control_message">Etes-vous sûr de vouloir supprimer ce contrôle horaire ? </string>
+
+    <string name="player_1">Joueur 1</string>
+    <string name="player_1_mode">Mode de joueur 1</string>
+    <string name="player_2">Joueur 2</string>
+    <string name="player_2_mode">Mode de joueur 2</string>
+
+    <string name="mode_constant_time">Temps constant par tour</string>
+    <string name="mode_time_addition">Ajout de temps après chaque tour</string>
+    <string name="mode_no_addition">Aucun ajout de temps après chaque tour</string>
+    <string name="label_time_per_turn">Temps par tour</string>
+    <string name="label_start_time">Temps de départ</string>
+    <string name="label_time_addition">Temps ajouté</string>
+
+    <string name="rapid">Rapide</string>
+    <string name="blitz">Blitz</string>
+    <string name="bullet">Bullet</string>
+
+    <string name="start_time_pattern">%d min</string>
+    <string name="addition_time_pattern">+%d sec</string>
+
+    <string name="new_game_mode">Créer un nouveau mode de jeu</string>
+    <string name="restart_dialog_title">Recommencer le jeu</string>
+    <string name="restart_dialog_message">Etes-Vous sûr de recommancer le jeu?</string>
+
+    <string name="game_mode_updated">Mode de jeu mis à jour</string>
+    <string name="first_player_time_expired">Le temps du premier joueur est expiré !</string>
+    <string name="second_player_time_expired">Le temps du deuxième joueur est expiré!</string>
+
+</resources>
