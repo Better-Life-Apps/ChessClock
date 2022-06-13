@@ -13,6 +13,7 @@ import com.betterlifeapps.std.common.UiEvent
 import com.betterlifeapps.std.common.UiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -72,11 +73,7 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
                             )
                         )
                     if (newPlayerState.timeMillis <= 0) {
-                        postUiEvent(GameScreenUiEvent.TimeExpired(gameState.value.isFirstPlayerTurn))
-                        gameState.value = gameState.value.copy(
-                            state = State.FINISHED,
-                        )
-                        cancel()
+                        onTimeExpired()
                     }
                     gameState.value = if (isFirstPlayerTurn) {
                         gameState.value.copy(player1 = newPlayerState)
@@ -88,6 +85,13 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
         } else {
             timerJob?.cancel()
         }
+    }
+
+    private fun onTimeExpired() {
+        postUiEvent(GameScreenUiEvent.TimeExpired(gameState.value.isFirstPlayerTurn))
+        postUiEvent(PlaySoundRes(R.raw.time_over))
+        gameState.value = gameState.value.copy(state = State.FINISHED)
+        timerJob?.cancel()
     }
 
     fun onPlayer1Clicked() {

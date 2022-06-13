@@ -146,17 +146,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     override fun onUiEvent(event: UiEvent) {
         when (event) {
             is GameScreenUiEvent.TimeExpired -> {
-                val player = if (event.isFirstPlayerTurn) "First" else "Second"
-                showLongToast("$player player time expired!")
-                val vibrator =
-                    ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val effect = VibrationEffect.createOneShot(300L, 200)
-                    vibrator?.vibrate(effect)
-                } else {
-                    @Suppress("DEPRECATION")
-                    vibrator?.vibrate(300L)
-                }
+                onTimeExpired(event)
             }
             is GameScreenUiEvent.ShowConfirmationDialog -> {
                 dialogManager.showConfirmationDialog(
@@ -170,6 +160,20 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                 resetPlayerViewsHeight()
             }
             else -> super.onUiEvent(event)
+        }
+    }
+
+    private fun onTimeExpired(event: GameScreenUiEvent.TimeExpired) {
+        val player = if (event.isFirstPlayerTurn) "First" else "Second"
+        showLongToast("$player player time expired!")
+        val vibrator =
+            ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val effect = VibrationEffect.createOneShot(300L, 200)
+            vibrator?.vibrate(effect)
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator?.vibrate(300L)
         }
     }
 
