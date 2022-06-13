@@ -26,4 +26,6 @@
     <string name="restart_dialog_title">Начать с начала</string>
     <string name="restart_dialog_message">Вы точно хотите начать с начала?</string>
     <string name="game_mode_updated">Режим игры обновлён</string>
+    <string name="first_player_time_expired">Время первого игрока вышло!</string>
+    <string name="second_player_time_expired">Время второго игрока вышло!</string>
 </resources>

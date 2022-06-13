@@ -1,14 +1,12 @@
 package com.betterlifeapps.chessclock.ui.game
 
 import android.animation.ValueAnimator
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.annotation.RawRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -35,7 +33,6 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
 
     private val binding by viewBinding<FragmentGameBinding>()
     private val viewModel by viewModels<GameViewModel>()
-    private var mediaPlayer = MediaPlayer()
 
     @Inject
     lateinit var dialogManager: DialogManager
@@ -164,8 +161,13 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     }
 
     private fun onTimeExpired(event: GameScreenUiEvent.TimeExpired) {
-        val player = if (event.isFirstPlayerTurn) "First" else "Second"
-        showLongToast("$player player time expired!")
+        val textMessage = if (event.isFirstPlayerTurn) {
+            R.string.first_player_time_expired
+        } else {
+            R.string.second_player_time_expired
+        }
+        showLongToast(textMessage)
+
         val vibrator =
             ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
