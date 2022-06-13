@@ -1,12 +1,14 @@
 package com.betterlifeapps.chessclock.ui.game
 
 import android.animation.ValueAnimator
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import androidx.annotation.RawRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -19,8 +21,10 @@ import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.databinding.FragmentGameBinding
 import com.betterlifeapps.chessclock.domain.GameState
 import com.betterlifeapps.chessclock.domain.State
+import com.betterlifeapps.chessclock.ui.game.GameViewModel.GameScreenUiEvent
 import com.betterlifeapps.chessclock.ui.widget.PlayerView
 import com.betterlifeapps.std.BaseFragment
+import com.betterlifeapps.std.common.UiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
@@ -31,6 +35,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
 
     private val binding by viewBinding<FragmentGameBinding>()
     private val viewModel by viewModels<GameViewModel>()
+    private var mediaPlayer = MediaPlayer()
 
     @Inject
     lateinit var dialogManager: DialogManager
@@ -76,7 +81,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
             .onEach(::bindGameState)
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.uiEvent
+        viewModel.uiEvents
             .onEach(::onUiEvent)
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -138,9 +143,9 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         }
     }
 
-    private fun onUiEvent(event: GameViewModel.UiEvent) {
+    override fun onUiEvent(event: UiEvent) {
         when (event) {
-            is GameViewModel.UiEvent.TimeExpired -> {
+            is GameScreenUiEvent.TimeExpired -> {
                 val player = if (event.isFirstPlayerTurn) "First" else "Second"
                 showLongToast("$player player time expired!")
                 val vibrator =
@@ -153,7 +158,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                     vibrator?.vibrate(300L)
                 }
             }
-            is GameViewModel.UiEvent.ShowConfirmationDialog -> {
+            is GameScreenUiEvent.ShowConfirmationDialog -> {
                 dialogManager.showConfirmationDialog(
                     getString(R.string.restart_dialog_title),
                     getString(R.string.restart_dialog_message)
@@ -161,9 +166,10 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                     event.onConfirmClicked()
                 }
             }
-            is GameViewModel.UiEvent.Restart -> {
+            is GameScreenUiEvent.Restart -> {
                 resetPlayerViewsHeight()
             }
+            else -> super.onUiEvent(event)
         }
     }
 

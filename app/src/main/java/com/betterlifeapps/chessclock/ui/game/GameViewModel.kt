@@ -1,6 +1,7 @@
 package com.betterlifeapps.chessclock.ui.game
 
 import androidx.lifecycle.viewModelScope
+import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.domain.GameMode
 import com.betterlifeapps.chessclock.domain.GameState
@@ -8,13 +9,13 @@ import com.betterlifeapps.chessclock.domain.PlayerState
 import com.betterlifeapps.chessclock.domain.State
 import com.betterlifeapps.chessclock.domain.TimeControl
 import com.betterlifeapps.std.BaseViewModel
+import com.betterlifeapps.std.common.UiEvent
+import com.betterlifeapps.std.common.UiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -41,9 +42,6 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
         getDefaultGameState()
     )
 
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent: Flow<UiEvent> = _uiEvent
-
     fun onControlButtonClicked() {
         if (gameState.value.state == State.FINISHED) {
             restart()
@@ -53,7 +51,7 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
     }
 
     private fun toggleGameState() {
-        val newState = if(gameState.value.state == State.RUNNING) State.PAUSED else State.RUNNING
+        val newState = if (gameState.value.state == State.RUNNING) State.PAUSED else State.RUNNING
         gameState.value =
             gameState.value.copy(state = newState)
         if (gameState.value.state == State.RUNNING) {
@@ -68,9 +66,13 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
                     }
 
                     val newPlayerState =
-                        currentPlayerState.copy(timeMillis = (currentPlayerState.timeMillis - 100L).coerceAtLeast(0L))
+                        currentPlayerState.copy(
+                            timeMillis = (currentPlayerState.timeMillis - 100L).coerceAtLeast(
+                                0L
+                            )
+                        )
                     if (newPlayerState.timeMillis <= 0) {
-                        _uiEvent.emit(UiEvent.TimeExpired(gameState.value.isFirstPlayerTurn))
+                        postUiEvent(GameScreenUiEvent.TimeExpired(gameState.value.isFirstPlayerTurn))
                         gameState.value = gameState.value.copy(
                             state = State.FINISHED,
                         )
@@ -109,6 +111,8 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
             ),
             isFirstPlayerTurn = !isFirstPlayerTurn
         )
+
+        postUiEvent(PlaySoundRes(R.raw.click_sound))
     }
 
     fun onPlayer2Clicked() {
@@ -132,6 +136,8 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
             ),
             isFirstPlayerTurn = !isFirstPlayerTurn
         )
+
+        postUiEvent(PlaySoundRes(R.raw.click_sound))
     }
 
     private fun getGameStateFromGameMode(gameMode: GameMode): GameState {
@@ -148,18 +154,16 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
     fun onRestartClicked() {
         when (gameState.value.state) {
             State.PAUSED -> {
-                runCoroutine {
-                    _uiEvent.emit(UiEvent.ShowConfirmationDialog(
-                        onConfirmClicked = {
-                            restart()
-                            runCoroutine { _uiEvent.emit(UiEvent.Restart) }
-                        }
-                    ))
-                }
+                postUiEvent(GameScreenUiEvent.ShowConfirmationDialog(
+                    onConfirmClicked = {
+                        restart()
+                        postUiEvent(GameScreenUiEvent.Restart)
+                    }
+                ))
             }
             State.FINISHED -> {
                 restart()
-                runCoroutine { _uiEvent.emit(UiEvent.Restart) }
+                postUiEvent(GameScreenUiEvent.Restart)
             }
             else -> Unit
         }
@@ -177,10 +181,9 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
         isFirstPlayerTurn = true,
         state = State.READY
     )
-
-    sealed class UiEvent {
-        data class TimeExpired(val isFirstPlayerTurn: Boolean) : UiEvent()
-        object Restart : UiEvent()
-        data class ShowConfirmationDialog(val onConfirmClicked: () -> Unit) : UiEvent()
+    sealed class GameScreenUiEvent : UiEvent() {
+        data class TimeExpired(val isFirstPlayerTurn: Boolean) : GameScreenUiEvent()
+        object Restart : GameScreenUiEvent()
+        data class ShowConfirmationDialog(val onConfirmClicked: () -> Unit) : GameScreenUiEvent()
     }
 }
