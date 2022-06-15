@@ -1,6 +1,7 @@
 package com.betterlifeapps.chessclock.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -9,19 +10,25 @@ import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.data.dao.AdditionTimeControlDao
 import com.betterlifeapps.chessclock.data.dao.ConstantTimeControlDao
 import com.betterlifeapps.chessclock.data.dao.GameModeDao
+import com.betterlifeapps.chessclock.data.dao.GameStateDao
 import com.betterlifeapps.chessclock.data.dao.NoAdditionTimeControlDao
 import com.betterlifeapps.chessclock.data.entities.DataAdditionTimeControl
 import com.betterlifeapps.chessclock.data.entities.DataConstantTimeControl
 import com.betterlifeapps.chessclock.data.entities.DataGameMode
+import com.betterlifeapps.chessclock.data.entities.DataGameState
 import com.betterlifeapps.chessclock.data.entities.DataNoAdditionTimeControl
 import com.betterlifeapps.chessclock.data.typeconverters.OffsetDateTimeTypeConverter
 import java.time.OffsetDateTime
 
-private const val DATABASE_VERSION = 1
+private const val DATABASE_VERSION = 2
 
 @Database(
-    entities = [DataGameMode::class, DataConstantTimeControl::class, DataAdditionTimeControl::class, DataNoAdditionTimeControl::class],
-    version = DATABASE_VERSION
+    entities = [DataGameMode::class, DataConstantTimeControl::class, DataAdditionTimeControl::class, DataNoAdditionTimeControl::class, DataGameState::class],
+    version = DATABASE_VERSION,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
 )
 @TypeConverters(OffsetDateTimeTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -30,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val additionTimeControlDao: AdditionTimeControlDao
     abstract val noAdditionTimeControlDao: NoAdditionTimeControlDao
     abstract val gameModeDao: GameModeDao
+    abstract val gameStateDao: GameStateDao
 
     suspend fun addStandardGameModes(context: Context) = withTransaction {
         addRapidGameMode(context)

@@ -86,7 +86,13 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     private fun bindGameState(gameState: GameState) = with(binding) {
         playerView1.bindState(gameState.player1)
         playerView2.bindState(gameState.player2)
-        controlButton.setImageResource(if (gameState.state == State.RUNNING) R.drawable.ic_pause_48 else R.drawable.ic_play_48)
+        controlButton.setImageResource(
+            when (gameState.state) {
+                State.RUNNING -> R.drawable.ic_pause_48
+                State.FINISHED -> R.drawable.ic_restart_48
+                else -> R.drawable.ic_play_48
+            }
+        )
         settings.isVisible = gameState.state != State.RUNNING
         restart.isVisible = gameState.state == State.PAUSED
 

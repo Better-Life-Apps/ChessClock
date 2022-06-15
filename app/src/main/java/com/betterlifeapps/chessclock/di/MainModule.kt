@@ -8,6 +8,8 @@ import com.betterlifeapps.chessclock.common.ResourceResolverImpl
 import com.betterlifeapps.chessclock.data.AppDatabase
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.data.GameModeRepositoryImpl
+import com.betterlifeapps.chessclock.data.GameStateRepository
+import com.betterlifeapps.chessclock.data.GameStateRepositoryImpl
 import com.betterlifeapps.chessclock.data.TimeControlRepository
 import com.betterlifeapps.chessclock.data.TimeControlRepositoryImpl
 import com.betterlifeapps.std.ResourceResolver
@@ -56,6 +58,10 @@ abstract class MainModule {
     @Singleton
     @Binds
     abstract fun bindTimeControlRepository(timeControlRepositoryImpl: TimeControlRepositoryImpl): TimeControlRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindGameStateRepository(gameStateRepositoryImpl: GameStateRepositoryImpl): GameStateRepository
 
     @Singleton
     @Binds

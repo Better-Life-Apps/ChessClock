@@ -17,6 +17,7 @@ interface GameModeRepository {
     fun getStandardGameModes(): Flow<List<GameMode>>
     suspend fun selectGameMode(id: Int)
     fun getSelectedGameMode(): Flow<GameMode>
+    suspend fun getSelectedGameModeSync(): GameMode?
     suspend fun deleteAndCheckSelection(id: Int, isSelected: Boolean)
 }
 
@@ -64,6 +65,8 @@ class GameModeRepositoryImpl @Inject constructor(
         appDatabase.withTransaction {
             appDatabase.gameModeDao.deselectCurrentGameMode()
             appDatabase.gameModeDao.selectGameMode(id)
+            // Clear game state because it's no longer valid and need to restart the game
+            appDatabase.gameStateDao.deleteGameState()
         }
     }
 
@@ -86,6 +89,10 @@ class GameModeRepositoryImpl @Inject constructor(
 
     private suspend fun selectDefaultGameMode() {
         selectGameMode(0)
+    }
+
+    override suspend fun getSelectedGameModeSync(): GameMode? {
+        return appDatabase.gameModeDao.getSelectedGameMode()?.mapToGameMode()
     }
 
     private suspend fun DataGameMode.mapToGameMode(): GameMode {
