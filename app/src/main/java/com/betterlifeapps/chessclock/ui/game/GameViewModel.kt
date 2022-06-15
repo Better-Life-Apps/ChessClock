@@ -39,9 +39,7 @@ class GameViewModel @Inject constructor(gameModeRepository: GameModeRepository) 
 
     private var timerJob: Job? = null
 
-    val gameState = MutableStateFlow(
-        getDefaultGameState()
-    )
+    val gameState = MutableStateFlow(getDefaultGameState())
 
     fun onControlButtonClicked() {
         if (gameState.value.state == State.FINISHED) {
