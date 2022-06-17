@@ -1,7 +1,7 @@
 package com.betterlifeapps.chessclock
 
-import android.app.Application
+import com.betterlifeapps.std.BaseApplication
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class ChessClockApp : Application()
+class ChessClockApp : BaseApplication()
