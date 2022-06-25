@@ -10,6 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.betterlifeapps.chessclock.ui.game.GameViewModel.GameScreenUiEvent
 import com.betterlifeapps.chessclock.ui.widget.PlayerView
 import com.betterlifeapps.std.BaseFragment
 import com.betterlifeapps.std.common.UiEvent
+import com.betterlifeapps.std.components.rating.RatingDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
@@ -81,6 +83,8 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         viewModel.uiEvents
             .onEach(::onUiEvent)
             .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        RatingDialogFragment().show(parentFragmentManager, null)
     }
 
     private fun bindGameState(gameState: GameState) = with(binding) {
