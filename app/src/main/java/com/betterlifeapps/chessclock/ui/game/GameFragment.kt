@@ -10,12 +10,12 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.betterlifeapps.chessclock.R
+import com.betterlifeapps.chessclock.common.Constants
 import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.databinding.FragmentGameBinding
 import com.betterlifeapps.chessclock.domain.GameState
@@ -25,6 +25,7 @@ import com.betterlifeapps.chessclock.ui.widget.PlayerView
 import com.betterlifeapps.std.BaseFragment
 import com.betterlifeapps.std.common.UiEvent
 import com.betterlifeapps.std.components.rating.RatingDialogFragment
+import com.betterlifeapps.std.components.settings.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
@@ -38,6 +39,9 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
 
     @Inject
     lateinit var dialogManager: DialogManager
+
+    @Inject
+    lateinit var settings: Settings
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,8 +87,6 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         viewModel.uiEvents
             .onEach(::onUiEvent)
             .launchIn(viewLifecycleOwner.lifecycleScope)
-
-        RatingDialogFragment().show(parentFragmentManager, null)
     }
 
     private fun bindGameState(gameState: GameState) = with(binding) {
@@ -171,12 +173,16 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
     }
 
     private fun onTimeExpired(event: GameScreenUiEvent.TimeExpired) {
+        val shouldShowRatingDialog = shouldShowRatingDialog()
         val textMessage = if (event.isFirstPlayerTurn) {
             R.string.first_player_time_expired
         } else {
             R.string.second_player_time_expired
         }
-        showLongToast(textMessage)
+        // Don't show toast if rating dialog should be shown
+        if (!shouldShowRatingDialog) {
+            showLongToast(textMessage)
+        }
 
         val vibrator =
             ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
@@ -187,6 +193,28 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
             @Suppress("DEPRECATION")
             vibrator?.vibrate(300L)
         }
+
+        if (shouldShowRatingDialog) {
+            showRatingDialog()
+        }
+    }
+
+    private fun shouldShowRatingDialog(): Boolean {
+        val launchCount = settings.getInt(Settings.KEY_LAUNCH_COUNT, 0)
+        val gamesToNextRatingDialog = settings.getInt(Constants.KEY_GAMES_TO_NEXT_RATING_DIALOG, 3)
+        settings.setInt(Constants.KEY_GAMES_TO_NEXT_RATING_DIALOG, gamesToNextRatingDialog - 1)
+        val ratingSubmitted = settings.getBool(Settings.KEY_RATING_SUBMITTED, false)
+
+        return launchCount > 2 && gamesToNextRatingDialog <= 0 && !ratingSubmitted
+    }
+
+    private fun showRatingDialog() {
+        observeFragmentResult<RatingDialogFragment.RatingDialogResult>(RatingDialogFragment.TAG_RATING_DIALOG_RESULT) {
+            if (it == RatingDialogFragment.RatingDialogResult.DISMISSED) {
+                settings.setInt(Constants.KEY_GAMES_TO_NEXT_RATING_DIALOG, 3)
+            }
+        }
+        RatingDialogFragment().show(parentFragmentManager, null)
     }
 
     companion object {

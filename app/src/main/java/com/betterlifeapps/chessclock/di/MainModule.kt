@@ -13,6 +13,8 @@ import com.betterlifeapps.chessclock.data.GameStateRepositoryImpl
 import com.betterlifeapps.chessclock.data.TimeControlRepository
 import com.betterlifeapps.chessclock.data.TimeControlRepositoryImpl
 import com.betterlifeapps.std.ResourceResolver
+import com.betterlifeapps.std.components.settings.Settings
+import com.betterlifeapps.std.components.settings.SettingsHolder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -48,6 +50,12 @@ abstract class MainModule {
                     .addCallback(callback)
                     .build()
             return database
+        }
+
+        @Singleton
+        @Provides
+        fun provideSettings(@ApplicationContext context: Context): Settings {
+            return SettingsHolder.get(context)
         }
     }
 
