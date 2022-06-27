@@ -1,9 +1,11 @@
 package com.betterlifeapps.chessclock.ui.settings.custom
 
-import com.betterlifeapps.chessclock.R
+import android.content.Context
+import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.data.GameModeRepository
-import com.betterlifeapps.std.BaseViewModel
-import com.betterlifeapps.std.common.UiEvent
+import com.betterlifeapps.chessclock.data.GameStateRepository
+import com.betterlifeapps.chessclock.ui.settings.GameModeListViewModel
+import com.betterlifeapps.std.ResourceResolver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -13,8 +15,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
-class CustomViewModel @Inject constructor(private val gameModeRepository: GameModeRepository) :
-    BaseViewModel() {
+class CustomViewModel @Inject constructor(
+    private val gameModeRepository: GameModeRepository,
+    gameStateRepository: GameStateRepository,
+    resourceResolver: ResourceResolver
+) : GameModeListViewModel(
+    gameModeRepository,
+    gameStateRepository,
+    resourceResolver
+) {
 
     fun deleteGameMode(item: ItemCustomGameMode) {
         runCoroutine {
@@ -22,11 +31,8 @@ class CustomViewModel @Inject constructor(private val gameModeRepository: GameMo
         }
     }
 
-    fun selectGameMode(item: ItemCustomGameMode) {
-        runCoroutine {
-            gameModeRepository.selectGameMode(item.id)
-            postUiEvent(UiEvent.ShowShortToastRes(R.string.game_mode_updated))
-        }
+    fun selectGameMode(item: ItemCustomGameMode, context: Context) {
+        onGameModeSelected(item.id, context)
     }
 
     val timeControls: Flow<List<ItemCustomGameMode>> =

@@ -34,4 +34,7 @@
     <string name="first_player_time_expired">First player time is expired!</string>
     <string name="second_player_time_expired">Second player time is expired!</string>
 
+    <string name="select_game_mode_confirmation_title">Select game mode</string>
+    <string name="select_game_mode_confirmation_message">Are you sure want to select game mode? The progress of current game will be lost.</string>
+
 </resources>

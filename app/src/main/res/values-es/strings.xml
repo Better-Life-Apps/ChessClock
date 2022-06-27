@@ -28,4 +28,6 @@
     <string name="game_mode_updated">Modo de juego actualizado</string>
     <string name="first_player_time_expired">El tiempo del primer jugador ha expirado.</string>
     <string name="second_player_time_expired">¡El tiempo del segundo jugador ha expirado!</string>
+    <string name="select_game_mode_confirmation_message">¿Estás seguro de que quieres seleccionar el modo de juego? El progreso del juego actual se perderá.</string>
+    <string name="select_game_mode_confirmation_title">Selecciona el modo de juego</string>
 </resources>

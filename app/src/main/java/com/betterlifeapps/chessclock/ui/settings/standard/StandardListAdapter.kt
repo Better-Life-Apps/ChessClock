@@ -1,5 +1,6 @@
 package com.betterlifeapps.chessclock.ui.settings.standard
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.databinding.ItemStandardBinding
 
-class StandardListAdapter(private val onItemClick: (ItemStandardGameMode) -> Unit) :
+class StandardListAdapter(private val onItemClick: (ItemStandardGameMode, Context) -> Unit) :
     ListAdapter<ItemStandardGameMode, StandardListAdapter.StandardViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StandardViewHolder {
@@ -35,7 +36,7 @@ class StandardListAdapter(private val onItemClick: (ItemStandardGameMode) -> Uni
             timeDescription.setTextColor(primaryColor)
             additionDescription.setTextColor(primaryColor)
             root.setOnClickListener {
-                onItemClick(item)
+                onItemClick(item, root.context)
             }
         }
     }

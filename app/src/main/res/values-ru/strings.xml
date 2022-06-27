@@ -28,4 +28,6 @@
     <string name="game_mode_updated">Режим игры обновлён</string>
     <string name="first_player_time_expired">Время первого игрока вышло!</string>
     <string name="second_player_time_expired">Время второго игрока вышло!</string>
+    <string name="select_game_mode_confirmation_title">Выбрать режим игры</string>
+    <string name="select_game_mode_confirmation_message">Вы действительно хотите выбрать этот режим игры? Прогресс текущей игры будет утерян.</string>
 </resources>

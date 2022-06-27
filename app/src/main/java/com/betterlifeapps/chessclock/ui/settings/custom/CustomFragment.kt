@@ -12,9 +12,9 @@ import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.databinding.FragmentCustomBinding
 import com.betterlifeapps.std.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CustomFragment : BaseFragment(R.layout.fragment_custom) {
@@ -27,7 +27,7 @@ class CustomFragment : BaseFragment(R.layout.fragment_custom) {
 
     private val customClickListener = object : ListItemClickListener {
         override fun onItemClicked(item: ItemCustomGameMode) {
-            viewModel.selectGameMode(item)
+            viewModel.selectGameMode(item, requireContext())
         }
 
         override fun onItemLongClicked(item: ItemCustomGameMode) {

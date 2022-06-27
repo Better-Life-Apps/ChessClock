@@ -28,4 +28,6 @@
     <string name="game_mode_updated">गेम मोड अपडेट किया गया</string>
     <string name="first_player_time_expired">पहले खिलाड़ी का समय समाप्त हो गया है!</string>
     <string name="second_player_time_expired">दूसरे खिलाड़ी का समय समाप्त हो गया है!</string>
+    <string name="select_game_mode_confirmation_title">गेम मोड चुनें</string>
+    <string name="select_game_mode_confirmation_message">क्या आप वाकई गेम मोड चुनना चाहते हैं? वर्तमान खेल की प्रगति खो जाएगी।</string>
 </resources>

@@ -1,20 +1,26 @@
 package com.betterlifeapps.chessclock.ui.settings.standard
 
+import android.content.Context
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.data.GameModeRepository
+import com.betterlifeapps.chessclock.data.GameStateRepository
 import com.betterlifeapps.chessclock.domain.TimeControl
-import com.betterlifeapps.std.BaseViewModel
+import com.betterlifeapps.chessclock.ui.settings.GameModeListViewModel
 import com.betterlifeapps.std.ResourceResolver
-import com.betterlifeapps.std.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class StandardViewModel @Inject constructor(
-    private val gameModeRepository: GameModeRepository,
-    private val resourceResolver: ResourceResolver
-) : BaseViewModel() {
+    gameModeRepository: GameModeRepository,
+    private val resourceResolver: ResourceResolver,
+    gameStateRepository: GameStateRepository
+) : GameModeListViewModel(
+    gameModeRepository,
+    gameStateRepository,
+    resourceResolver
+) {
     val standardTimeControls = gameModeRepository.getStandardGameModes().map { list ->
         list.map {
             val timeMillis = (it.player1TimeControl as TimeControl.AdditionTimeControl).startTime
@@ -35,12 +41,7 @@ class StandardViewModel @Inject constructor(
         }
     }
 
-    fun onItemClicked(item: ItemStandardGameMode) {
-        runCoroutine {
-            if (!item.isSelected) {
-                gameModeRepository.selectGameMode(item.id)
-                postUiEvent(UiEvent.ShowShortToastRes(R.string.game_mode_updated))
-            }
-        }
+    fun onItemClicked(item: ItemStandardGameMode, context: Context) {
+        onGameModeSelected(item.id, context)
     }
 }

@@ -80,7 +80,6 @@ class EditFragment : BaseComposeFragment() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EditScreen(viewModel: EditViewModel) {
     val player1Mode by viewModel.player1Mode.collectAsState()
