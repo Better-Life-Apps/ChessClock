@@ -3,7 +3,7 @@ package com.betterlifeapps.chessclock.ui.settings.custom
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +24,7 @@ class CustomListAdapter(private val clickListener: ListItemClickListener) :
             name.text = item.name
             date.text = item.date
 
-            check.isVisible = item.isSelected
+            check.isInvisible = !item.isSelected
 
             timeControlContainer.setOnClickListener {
                 clickListener.onItemClicked(item)
