@@ -53,12 +53,14 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                 R.color.yellow
             )
         )
+        binding.playerView1.setPlayerLabel(R.string.player_1)
         binding.playerView2.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),
                 R.color.red_1
             )
         )
+        binding.playerView2.setPlayerLabel(R.string.player_2)
 
         binding.playerView1.setOnClickListener {
             viewModel.onPlayer1Clicked()
@@ -112,6 +114,10 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         if (gameState.state == State.READY) {
             resetPlayerViewsHeight()
         }
+
+        // Show player labels only if game state is READY
+        binding.playerView1.setPlayerLabelVisible(gameState.state == State.READY)
+        binding.playerView2.setPlayerLabelVisible(gameState.state == State.READY)
     }
 
     private fun startHeightAnim(targetView: PlayerView, secondaryView: PlayerView) {

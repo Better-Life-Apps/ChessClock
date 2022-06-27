@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import com.betterlifeapps.chessclock.databinding.ViewPlayerBinding
 import com.betterlifeapps.chessclock.domain.PlayerState
 import com.betterlifeapps.chessclock.domain.formattedTime
@@ -19,5 +21,13 @@ class PlayerView @JvmOverloads constructor(
     fun bindState(state: PlayerState) {
         binding.time.text = state.formattedTime
         binding.turnNumber.text = state.turn.toString()
+    }
+
+    fun setPlayerLabel(@StringRes playerLabelRes: Int) {
+        binding.playerLabel.setText(playerLabelRes)
+    }
+
+    fun setPlayerLabelVisible(isVisible: Boolean) {
+        binding.playerLabel.isVisible = isVisible
     }
 }
