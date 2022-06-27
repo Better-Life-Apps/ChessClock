@@ -88,7 +88,7 @@ class GameModeRepositoryImpl @Inject constructor(
     }
 
     private suspend fun selectDefaultGameMode() {
-        selectGameMode(0)
+        selectGameMode(DEFAULT_GAME_MODE_ID)
     }
 
     override suspend fun getSelectedGameModeSync(): GameMode? {
