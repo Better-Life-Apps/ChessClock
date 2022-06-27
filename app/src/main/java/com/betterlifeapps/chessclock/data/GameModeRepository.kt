@@ -108,4 +108,8 @@ class GameModeRepositoryImpl @Inject constructor(
             player2Control
         )
     }
+
+    companion object {
+        private const val DEFAULT_GAME_MODE_ID = 1
+    }
 }
