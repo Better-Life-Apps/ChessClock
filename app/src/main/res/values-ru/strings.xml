@@ -30,4 +30,5 @@
     <string name="second_player_time_expired">Время второго игрока вышло!</string>
     <string name="select_game_mode_confirmation_title">Выбрать режим игры</string>
     <string name="select_game_mode_confirmation_message">Вы действительно хотите выбрать этот режим игры? Прогресс текущей игры будет утерян.</string>
+    <string name="error_game_mode_already_exists">Режим игры с таким названием уже существует.</string>
 </resources>

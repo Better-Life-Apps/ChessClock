@@ -19,6 +19,7 @@ interface GameModeRepository {
     fun getSelectedGameMode(): Flow<GameMode>
     suspend fun getSelectedGameModeSync(): GameMode?
     suspend fun deleteAndCheckSelection(id: Int, isSelected: Boolean)
+    suspend fun getGameModeNames(): List<String>
 }
 
 @Singleton
@@ -95,6 +96,10 @@ class GameModeRepositoryImpl @Inject constructor(
 
     override suspend fun getSelectedGameModeSync(): GameMode? {
         return appDatabase.gameModeDao.getSelectedGameMode()?.mapToGameMode()
+    }
+
+    override suspend fun getGameModeNames(): List<String> {
+        return appDatabase.gameModeDao.getGameModeNames()
     }
 
     private suspend fun DataGameMode.mapToGameMode(): GameMode {

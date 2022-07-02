@@ -105,6 +105,7 @@ fun EditScreen(viewModel: EditViewModel) {
                 .verticalScroll(rememberScrollState())
         ) {
             val name by viewModel.name.collectAsState()
+            val error by viewModel.nameErrorText.collectAsState()
             UiTextField(
                 value = name,
                 onValueChange = viewModel::updateName,
@@ -115,13 +116,22 @@ fun EditScreen(viewModel: EditViewModel) {
                     imeAction = ImeAction.Next
                 )
             )
+            Text(
+                text = error,
+                style = MaterialTheme.typography.body2,
+                color = MaterialTheme.colors.error
+            )
             VSpacer(height = 24)
             PlayerContainer(R.string.player_1, player1Mode, onPlayer1ModeChanged)
             VSpacer(height = 24)
             PlayerContainer(R.string.player_2, player2Mode, onPlayer2ModeChanged)
             VSpacer(height = 32)
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
-                UiButton(stringRes = R.string.confirm, onClick = viewModel::onDoneButtonClicked)
+                UiButton(
+                    stringRes = R.string.confirm,
+                    onClick = viewModel::onDoneButtonClicked,
+                    enabled = error.isBlank()
+                )
             }
         }
     }

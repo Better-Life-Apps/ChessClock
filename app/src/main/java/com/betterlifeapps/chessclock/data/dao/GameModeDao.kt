@@ -32,4 +32,7 @@ interface GameModeDao {
 
     @Query("DELETE FROM game_modes WHERE id = :id")
     fun deleteById(id: Int)
+
+    @Query("SELECT name FROM game_modes")
+    suspend fun getGameModeNames(): List<String>
 }

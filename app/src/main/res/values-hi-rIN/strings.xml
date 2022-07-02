@@ -30,4 +30,5 @@
     <string name="second_player_time_expired">दूसरे खिलाड़ी का समय समाप्त हो गया है!</string>
     <string name="select_game_mode_confirmation_title">गेम मोड चुनें</string>
     <string name="select_game_mode_confirmation_message">क्या आप वाकई गेम मोड चुनना चाहते हैं? वर्तमान खेल की प्रगति खो जाएगी।</string>
+    <string name="error_game_mode_already_exists">उस नाम का गेम मोड पहले से मौजूद है।</string>
 </resources>

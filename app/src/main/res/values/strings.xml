@@ -36,5 +36,6 @@
 
     <string name="select_game_mode_confirmation_title">Select game mode</string>
     <string name="select_game_mode_confirmation_message">Are you sure want to select game mode? The progress of current game will be lost.</string>
+    <string name="error_game_mode_already_exists">Game mode with that name already exists.</string>
 
 </resources>
