@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface GameModeDao {
     @Insert(onConflict = REPLACE)
-    suspend fun insertGameMode(gameMode: DataGameMode)
+    suspend fun insertGameMode(gameMode: DataGameMode): Long
 
     @Query("SELECT * FROM `game_modes` WHERE isStandard = 0")
     fun getCustomGameModes(): Flow<List<DataGameMode>>

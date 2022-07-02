@@ -48,7 +48,7 @@ class EditViewModel @Inject constructor(val gameModeRepository: GameModeReposito
                     player1TimeControl,
                     player2TimeControl
                 )
-                gameModeRepository.saveGameMode(gameMode)
+                gameModeRepository.createGameMode(gameMode)
             }
                 .onSuccess {
                     commandFlow.emit(EditScreenCommands.Finish)

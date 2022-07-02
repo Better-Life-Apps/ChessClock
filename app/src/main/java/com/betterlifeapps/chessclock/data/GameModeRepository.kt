@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
 interface GameModeRepository {
-    suspend fun saveGameMode(gameMode: GameMode)
+    suspend fun createGameMode(gameMode: GameMode)
     fun getCustomGameModes(): Flow<List<GameMode>>
     fun getStandardGameModes(): Flow<List<GameMode>>
     suspend fun selectGameMode(id: Int)
@@ -42,7 +42,7 @@ class GameModeRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun saveGameMode(gameMode: GameMode) {
+    override suspend fun createGameMode(gameMode: GameMode) {
         appDatabase.withTransaction {
             val player1Control = gameMode.player1TimeControl
             val player1ControlId = timeControlRepository.saveTimeControl(player1Control)
@@ -57,7 +57,9 @@ class GameModeRepositoryImpl @Inject constructor(
                 player1ControlId,
                 player2ControlId
             )
-            appDatabase.gameModeDao.insertGameMode(dataGameMode)
+            val id = appDatabase.gameModeDao.insertGameMode(dataGameMode)
+            // Select new created game mode by default
+            selectGameMode(id.toInt())
         }
     }
 
