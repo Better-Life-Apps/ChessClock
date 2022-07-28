@@ -8,6 +8,7 @@ import android.os.Vibrator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
@@ -82,9 +83,9 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
             viewModel.onRestartClicked()
         }
 
-        viewModel.gameState
-            .onEach(::bindGameState)
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.gameState.collectFlow {
+            bindGameState(it)
+        }
 
         viewModel.uiEvents
             .onEach(::onUiEvent)
@@ -104,15 +105,24 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         settings.isVisible = gameState.state != State.RUNNING
         restart.isVisible = gameState.state == State.PAUSED
 
-        if (gameState.state == State.RUNNING) {
-            if (gameState.isFirstPlayerTurn) {
-                startHeightAnim(playerView1, playerView2)
-            } else {
-                startHeightAnim(playerView2, playerView1)
+        when (gameState.state) {
+            State.READY -> {
+                resetPlayerViewsHeight()
             }
-        }
-        if (gameState.state == State.READY) {
-            resetPlayerViewsHeight()
+            State.RUNNING -> {
+                if (gameState.isFirstPlayerTurn) {
+                    animateHeightChange(playerView1, playerView2)
+                } else {
+                    animateHeightChange(playerView2, playerView1)
+                }
+            }
+            State.PAUSED, State.FINISHED -> {
+                if (gameState.isFirstPlayerTurn) {
+                    updatePlayersHeight(playerView1, playerView2)
+                } else {
+                    updatePlayersHeight(playerView2, playerView1)
+                }
+            }
         }
 
         // Show player labels only if game state is READY
@@ -120,14 +130,20 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         binding.playerView2.setPlayerLabelVisible(gameState.state == State.READY)
     }
 
-    private fun startHeightAnim(targetView: PlayerView, secondaryView: PlayerView) {
-        // Potential workaround for IllegalStateException in binding
-        val totalHeight = try {
-            binding.container.measuredHeight
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-            0
+    private fun updatePlayersHeight(bigger: PlayerView, smaller: PlayerView) {
+        view?.doOnLayout {
+            val totalHeight = getTotalHeight()
+            bigger.updateLayoutParams {
+                height = (totalHeight * EXPANDED_RATIO).toInt()
+            }
+            smaller.updateLayoutParams {
+                height = (totalHeight * (1 - EXPANDED_RATIO)).toInt()
+            }
         }
+    }
+
+    private fun animateHeightChange(targetView: PlayerView, secondaryView: PlayerView) {
+        val totalHeight = getTotalHeight()
         val startHeight = targetView.measuredHeight
         val endHeight = (totalHeight * EXPANDED_RATIO).toInt()
         val valueAnimator = ValueAnimator.ofInt(
@@ -147,6 +163,14 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
             }
         }
         valueAnimator.start()
+    }
+
+    private fun getTotalHeight() = try {
+        // Potential workaround for IllegalStateException in binding
+        binding.container.measuredHeight
+    } catch (e: IllegalStateException) {
+        e.printStackTrace()
+        0
     }
 
     private fun resetPlayerViewsHeight() {

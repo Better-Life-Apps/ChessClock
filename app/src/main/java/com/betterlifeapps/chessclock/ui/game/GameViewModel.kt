@@ -28,6 +28,7 @@ class GameViewModel @Inject constructor(
     private val gameStateRepository: GameStateRepository
 ) : BaseViewModel() {
     private var gameMode: GameMode? = null
+    private var timerJob: Job? = null
 
     val gameState = MutableStateFlow(getDefaultGameState())
 
@@ -58,8 +59,6 @@ class GameViewModel @Inject constructor(
             }
         }
     }
-
-    private var timerJob: Job? = null
 
     fun onControlButtonClicked() {
         if (gameState.value.state == State.FINISHED) {
