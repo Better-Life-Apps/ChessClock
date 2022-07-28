@@ -220,7 +220,9 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                 settings.setInt(Constants.KEY_GAMES_TO_NEXT_RATING_DIALOG, 3)
             }
         }
-        RatingDialogFragment().show(parentFragmentManager, null)
+        if (!parentFragmentManager.isStateSaved) {
+            RatingDialogFragment().show(parentFragmentManager, null)
+        }
     }
 
     companion object {
