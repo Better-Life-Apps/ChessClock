@@ -27,11 +27,11 @@
         app:layout_constraintTop_toBottomOf="@id/player_view_2" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/settings"
+        android:id="@+id/menu"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:background="@drawable/button_background"
-        android:src="@drawable/ic_settings_36"
+        android:src="@drawable/ic_menu_36"
         app:layout_constraintBottom_toBottomOf="@id/player_view_2"
         app:layout_constraintEnd_toStartOf="@id/control_button"
         app:layout_constraintStart_toStartOf="parent"

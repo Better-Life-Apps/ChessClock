@@ -71,7 +71,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
             viewModel.onPlayer2Clicked()
         }
 
-        binding.settings.setOnClickListener {
+        binding.menu.setOnClickListener {
             findNavController().navigate(R.id.dest_settings)
         }
 
@@ -102,7 +102,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
                 else -> R.drawable.ic_play_48
             }
         )
-        settings.isVisible = gameState.state != State.RUNNING
+        menu.isVisible = gameState.state != State.RUNNING
         restart.isVisible = gameState.state == State.PAUSED
 
         when (gameState.state) {
