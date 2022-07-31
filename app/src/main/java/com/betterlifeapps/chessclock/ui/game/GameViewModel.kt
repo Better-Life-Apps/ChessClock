@@ -2,6 +2,9 @@ package com.betterlifeapps.chessclock.ui.game
 
 import androidx.lifecycle.viewModelScope
 import com.betterlifeapps.chessclock.R
+import com.betterlifeapps.chessclock.common.Constants
+import com.betterlifeapps.chessclock.common.Constants.KEY_SOUND_GAME_OVER
+import com.betterlifeapps.chessclock.common.Constants.KEY_VIBRATION_GAME_OVER
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.data.GameStateRepository
 import com.betterlifeapps.chessclock.domain.GameMode
@@ -12,6 +15,8 @@ import com.betterlifeapps.chessclock.domain.TimeControl
 import com.betterlifeapps.std.BaseViewModel
 import com.betterlifeapps.std.common.UiEvent
 import com.betterlifeapps.std.common.UiEvent.PlaySoundRes
+import com.betterlifeapps.std.common.UiEvent.Vibrate
+import com.betterlifeapps.std.components.settings.Settings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +30,8 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val gameModeRepository: GameModeRepository,
-    private val gameStateRepository: GameStateRepository
+    private val gameStateRepository: GameStateRepository,
+    private val settings: Settings
 ) : BaseViewModel() {
     private var gameMode: GameMode? = null
     private var timerJob: Job? = null
@@ -103,7 +109,12 @@ class GameViewModel @Inject constructor(
 
     private fun onTimeExpired() {
         postUiEvent(GameScreenUiEvent.TimeExpired(gameState.value.isFirstPlayerTurn))
-        postUiEvent(PlaySoundRes(R.raw.time_over))
+        if (settings.getBool(KEY_SOUND_GAME_OVER, Constants.DEFAULT_SOUND_GAME_OVER)) {
+            postUiEvent(PlaySoundRes(R.raw.time_over))
+        }
+        if (settings.getBool(KEY_VIBRATION_GAME_OVER, Constants.DEFAULT_VIBRATION_GAME_OVER)) {
+            postUiEvent(Vibrate())
+        }
         updateGameState(gameState.value.copy(state = State.FINISHED))
         timerJob?.cancel()
     }
@@ -131,8 +142,9 @@ class GameViewModel @Inject constructor(
                 isFirstPlayerTurn = !isFirstPlayerTurn
             )
         )
-
-        postUiEvent(PlaySoundRes(R.raw.click_sound))
+        if (settings.getBool(Constants.KEY_SOUND_TURN, Constants.DEFAULT_SOUND_TURN)) {
+            postUiEvent(PlaySoundRes(R.raw.click_sound))
+        }
     }
 
     fun onPlayer2Clicked() {
@@ -159,7 +171,9 @@ class GameViewModel @Inject constructor(
             )
         )
 
-        postUiEvent(PlaySoundRes(R.raw.click_sound))
+        if (settings.getBool(Constants.KEY_SOUND_TURN, Constants.DEFAULT_SOUND_TURN)) {
+            postUiEvent(PlaySoundRes(R.raw.click_sound))
+        }
     }
 
     private fun getGameStateFromGameMode(gameMode: GameMode): GameState {

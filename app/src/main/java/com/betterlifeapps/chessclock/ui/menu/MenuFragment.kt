@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.ui.menu.modes.ModesScreen
+import com.betterlifeapps.chessclock.ui.menu.settings.SettingsScreen
 import com.betterlifeapps.chessclock.ui.theme.ChessAppTheme
 import com.betterlifeapps.chessclock.ui.theme.TabDeselected
 import com.betterlifeapps.std.BaseComposeFragment
@@ -44,7 +45,9 @@ class MenuFragment : BaseComposeFragment() {
                     composable("modes") {
                         ModesScreen()
                     }
-                    composable("settings") {}
+                    composable("settings") {
+                        SettingsScreen()
+                    }
                     composable("themes") {}
                     composable("about") {}
                 }

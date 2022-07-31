@@ -1,10 +1,7 @@
 package com.betterlifeapps.chessclock.ui.game
 
 import android.animation.ValueAnimator
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
@@ -212,16 +209,6 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         // Don't show toast if rating dialog should be shown
         if (!shouldShowRatingDialog) {
             showLongToast(textMessage)
-        }
-
-        val vibrator =
-            ContextCompat.getSystemService(requireContext(), Vibrator::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val effect = VibrationEffect.createOneShot(300L, 200)
-            vibrator?.vibrate(effect)
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator?.vibrate(300L)
         }
 
         if (shouldShowRatingDialog) {
