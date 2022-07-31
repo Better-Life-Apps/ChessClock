@@ -46,4 +46,5 @@
     <string name="setting_sound_game_over">Play sound when game is over</string>
     <string name="setting_vibration">Vibrate when game is over</string>
 
+    <string name="themes_coming_soon_message">Stylish themes will be available in future releases</string>
 </resources>

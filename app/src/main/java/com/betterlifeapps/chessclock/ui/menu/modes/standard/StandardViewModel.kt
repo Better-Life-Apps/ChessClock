@@ -1,11 +1,11 @@
-package com.betterlifeapps.chessclock.ui.settings.standard
+package com.betterlifeapps.chessclock.ui.menu.modes.standard
 
 import android.content.Context
 import com.betterlifeapps.chessclock.R
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.data.GameStateRepository
 import com.betterlifeapps.chessclock.domain.TimeControl
-import com.betterlifeapps.chessclock.ui.settings.GameModeListViewModel
+import com.betterlifeapps.chessclock.ui.menu.modes.GameModeListViewModel
 import com.betterlifeapps.std.ResourceResolver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

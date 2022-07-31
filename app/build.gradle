@@ -106,4 +106,8 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.5.0-alpha03'
     implementation composeNavigation
     implementation "androidx.compose.runtime:runtime-livedata:${versions.compose}"
+
+    // Lottie
+    implementation lottie
+    implementation lottieCompose
 }

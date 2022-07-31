@@ -1,4 +1,4 @@
-package com.betterlifeapps.chessclock.ui.settings.edit
+package com.betterlifeapps.chessclock.ui.menu.modes.edit
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope

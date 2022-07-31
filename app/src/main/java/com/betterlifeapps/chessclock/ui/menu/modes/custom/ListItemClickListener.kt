@@ -1,6 +1,4 @@
-package com.betterlifeapps.chessclock.ui.settings.custom
-
-import com.betterlifeapps.chessclock.domain.GameMode
+package com.betterlifeapps.chessclock.ui.menu.modes.custom
 
 interface ListItemClickListener {
     fun onItemClicked(item: ItemCustomGameMode) = Unit

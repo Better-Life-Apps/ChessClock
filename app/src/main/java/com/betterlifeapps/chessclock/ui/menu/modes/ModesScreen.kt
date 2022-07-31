@@ -11,7 +11,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import com.betterlifeapps.chessclock.ui.settings.ModesFragment
 import com.betterlifeapps.std.LocalFragmentManager
 
 @Composable

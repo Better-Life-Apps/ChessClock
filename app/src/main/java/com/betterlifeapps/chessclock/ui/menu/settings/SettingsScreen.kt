@@ -14,7 +14,6 @@ import com.betterlifeapps.std.ui.composables.UiSwitchSetting
 fun SettingsScreen() {
     val viewModel = hiltViewModel<SettingsViewModel>()
     Column(Modifier.fillMaxSize()) {
-
         UiSwitchSetting(
             text = stringResource(id = R.string.setting_sound_turn),
             checked = viewModel.soundTurn.collectAsState().value,

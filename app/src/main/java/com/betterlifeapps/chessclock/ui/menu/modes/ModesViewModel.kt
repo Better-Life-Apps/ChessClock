@@ -1,4 +1,4 @@
-package com.betterlifeapps.chessclock.ui.settings
+package com.betterlifeapps.chessclock.ui.menu.modes
 
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.std.BaseViewModel
@@ -7,7 +7,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
+class ModesViewModel @Inject constructor(
     gameModeRepository: GameModeRepository
 ) : BaseViewModel() {
 

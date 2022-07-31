@@ -10,5 +10,5 @@
     android:paddingTop="16dp"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     app:spanCount="2"
-    tools:context=".ui.settings.standard.StandardFragment"
+    tools:context=".ui.menu.modes.standard.StandardFragment"
     tools:listitem="@layout/item_standard"/>

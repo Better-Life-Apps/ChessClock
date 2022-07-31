@@ -1,4 +1,4 @@
-package com.betterlifeapps.chessclock.ui.settings.standard
+package com.betterlifeapps.chessclock.ui.menu.modes.standard
 
 import android.content.Context
 import android.view.LayoutInflater

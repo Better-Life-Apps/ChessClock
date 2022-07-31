@@ -1,4 +1,4 @@
-package com.betterlifeapps.chessclock.ui.settings
+package com.betterlifeapps.chessclock.ui.menu.modes
 
 import android.os.Bundle
 import android.text.Spannable
@@ -20,15 +20,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class ModesFragment : BaseFragment(R.layout.fragment_modes) {
 
     private val binding by viewBinding<FragmentModesBinding>()
-    private lateinit var settingsTabsAdapter: SettingsTabsAdapter
+    private lateinit var settingsTabsAdapter: ModesTabsAdapter
     private val titles = listOf(R.string.standard, R.string.custom)
-    private val viewModel: SettingsViewModel by viewModels()
+    private val viewModel: ModesViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //TabsAdapter should be lateinit, not lazy to avoid crash
-        settingsTabsAdapter = SettingsTabsAdapter(requireActivity())
+        settingsTabsAdapter = ModesTabsAdapter(requireActivity())
         binding.viewPager.adapter = settingsTabsAdapter
 
         viewModel.isStandardTabSelected.collectFlow {

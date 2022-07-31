@@ -1,4 +1,4 @@
-package com.betterlifeapps.chessclock.ui.settings.edit
+package com.betterlifeapps.chessclock.ui.menu.modes.edit
 
 import android.os.Bundle
 import android.view.View
@@ -39,9 +39,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.betterlifeapps.chessclock.R
-import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.ConstantTime
-import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.NoAddition
-import com.betterlifeapps.chessclock.ui.settings.edit.TimerMode.TimeAddition
+import com.betterlifeapps.chessclock.ui.menu.modes.edit.TimerMode.ConstantTime
+import com.betterlifeapps.chessclock.ui.menu.modes.edit.TimerMode.NoAddition
+import com.betterlifeapps.chessclock.ui.menu.modes.edit.TimerMode.TimeAddition
 import com.betterlifeapps.chessclock.ui.theme.ChessAppTheme
 import com.betterlifeapps.std.BaseComposeFragment
 import com.betterlifeapps.std.ui.composables.UiButton

@@ -1,8 +1,7 @@
-package com.betterlifeapps.chessclock.ui.settings
+package com.betterlifeapps.chessclock.ui.menu.modes
 
 import android.content.Context
 import com.betterlifeapps.chessclock.R
-import com.betterlifeapps.chessclock.common.DialogManager
 import com.betterlifeapps.chessclock.data.GameModeRepository
 import com.betterlifeapps.chessclock.data.GameStateRepository
 import com.betterlifeapps.chessclock.domain.State
