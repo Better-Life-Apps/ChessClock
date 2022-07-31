@@ -72,7 +72,7 @@ class GameFragment : BaseFragment(R.layout.fragment_game) {
         }
 
         binding.menu.setOnClickListener {
-            findNavController().navigate(R.id.dest_settings)
+            findNavController().navigate(R.id.dest_menu)
         }
 
         binding.controlButton.setOnClickListener {

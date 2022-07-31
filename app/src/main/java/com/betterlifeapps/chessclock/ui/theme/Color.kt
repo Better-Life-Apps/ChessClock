@@ -15,5 +15,6 @@ val Grey_Light = Color(0xFFE6E6E6)
 val Green_500 = Color(0xFF4caf50)
 val Red_500 = Color(0xFFf44336)
 
-
 val Yellow = Color(0xFFECA946)
+
+val TabDeselected = Color(0xFF666666)

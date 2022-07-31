@@ -11,25 +11,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.betterlifeapps.chessclock.R
-import com.betterlifeapps.chessclock.databinding.FragmentSettingsBinding
+import com.betterlifeapps.chessclock.databinding.FragmentModesBinding
 import com.betterlifeapps.std.BaseFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
+class ModesFragment : BaseFragment(R.layout.fragment_modes) {
 
-    private val binding by viewBinding<FragmentSettingsBinding>()
+    private val binding by viewBinding<FragmentModesBinding>()
     private lateinit var settingsTabsAdapter: SettingsTabsAdapter
     private val titles = listOf(R.string.standard, R.string.custom)
     private val viewModel: SettingsViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.title = getString(R.string.select_time_control)
-        binding.toolbar.onBackButtonClicked = {
-            findNavController().navigateUp()
-        }
 
         //TabsAdapter should be lateinit, not lazy to avoid crash
         settingsTabsAdapter = SettingsTabsAdapter(requireActivity())
@@ -75,5 +71,9 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private fun isTabDotted(position: Int, isStandardTabSelected: Boolean?): Boolean {
         return isStandardTabSelected != null && ((position == 0 && isStandardTabSelected) || (position == 1 && !isStandardTabSelected))
+    }
+
+    companion object {
+        fun newInstance() = ModesFragment()
     }
 }

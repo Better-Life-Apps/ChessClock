@@ -59,7 +59,7 @@ class CustomFragment : BaseFragment(R.layout.fragment_custom) {
     }
 
     private fun onCreateNewClicked() {
-        findNavController().navigate(R.id.action_new_time_control)
+        findNavController().navigate(R.id.dest_edit)
     }
 
     private fun showDeleteTimeControlDialog(item: ItemCustomGameMode) {
