@@ -5,6 +5,8 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.DynamicDrawableSpan
 import android.text.style.ImageSpan
+import android.text.style.StyleSpan
+import android.text.style.TypefaceSpan
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels

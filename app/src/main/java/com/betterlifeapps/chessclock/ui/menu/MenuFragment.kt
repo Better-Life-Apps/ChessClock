@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
 import com.betterlifeapps.chessclock.R
+import com.betterlifeapps.chessclock.ui.menu.about.AboutScreen
 import com.betterlifeapps.chessclock.ui.menu.modes.ModesScreen
 import com.betterlifeapps.chessclock.ui.menu.settings.SettingsScreen
 import com.betterlifeapps.chessclock.ui.menu.themes.ThemesScreen
@@ -52,7 +53,9 @@ class MenuFragment : BaseComposeFragment() {
                     composable("themes") {
                         ThemesScreen()
                     }
-                    composable("about") {}
+                    composable("about") {
+                        AboutScreen()
+                    }
                 }
                 BottomNavigationBar(navController = navController)
             }
