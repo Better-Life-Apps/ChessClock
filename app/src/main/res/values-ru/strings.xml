@@ -31,4 +31,14 @@
     <string name="select_game_mode_confirmation_title">Выбрать режим игры</string>
     <string name="select_game_mode_confirmation_message">Вы действительно хотите выбрать этот режим игры? Прогресс текущей игры будет утерян.</string>
     <string name="error_game_mode_already_exists">Режим игры с таким названием уже существует.</string>
+    <string name="bottom_nav_modes">Режимы</string>
+    <string name="bottom_nav_settings">Настройки</string>
+    <string name="bottom_nav_themes">Темы</string>
+    <string name="bottom_nav_about">О приложении</string>
+
+    <string name="setting_sound_turn">Звук после хода игрока</string>
+    <string name="setting_sound_game_over">Звук после завершения игры</string>
+    <string name="setting_vibration">Вибрация после завершения игры</string>
+
+    <string name="themes_coming_soon_message">Стильные темы будут доступны в следующих версиях</string>
 </resources>
